@@ -36,7 +36,7 @@ export default function Home() {
               View Work
             </button>
 
-            <button className="px-7 py-3 rounded-full border border-black text-sm font-medium hover:bg-black hover:text-white transition">
+            <button className="px-7 py-3 rounded-full border border-black text-sm font-medium hover:bg-black hover:text-white transition cursor-pointer">
               Contact Me
             </button>
           </div>
