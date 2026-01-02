@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Navbar from "./components/Navbar";
+
 import { projects } from "@/data/projects";
 
 
@@ -10,7 +10,7 @@ import { projects } from "@/data/projects";
 export default function Home() {
   return (
     <>
-      <Navbar />
+      
 
       {/* HERO */}
       <main className="min-h-screen bg-white flex items-center justify-center px-6 pt-32">

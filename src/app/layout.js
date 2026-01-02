@@ -1,5 +1,5 @@
 import GoogleAnalytics from "./components/GoogleAnalytics";
-
+import Navbar from "./components/Navbar";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
@@ -34,7 +34,7 @@ export default function RootLayout({ children }) {
 
         <GoogleAnalytics GA_MEASUREMENT_ID="G-77QF7MFC72" />
 
-
+        <Navbar />
         {children}
 
         <a
