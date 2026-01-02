@@ -28,7 +28,7 @@ export const projects = [
       "Brand identity project covering logo, colors, typography, and guidelines.",
   },
   {
-    slug: "packaging-design",
+    slug: "dearshe-packaging-design",
     title: "Dear She Packaging Design",
     category: "Packaging",
     description: "Premium box packaging concept for a Beauty brand.",

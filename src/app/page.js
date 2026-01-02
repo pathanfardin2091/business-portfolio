@@ -190,6 +190,47 @@ export default function Home() {
 </div>
 
 
+{/* CLIENTS */}
+<section className="bg-[#ffffff] px-6 py-32">
+  <div className="max-w-6xl mx-auto">
+
+    <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-center bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+      Clients I’ve Worked With
+    </h2>
+
+    <div className="mt-16 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+      
+      {/* LOGO CARD */}
+      {[  
+        "/clients/greengainz.png",
+        "/clients/kundal.png",
+        "/clients/atlas-mentor.png",
+        "/clients/shantee-homes.png",
+        "/clients/patel-classes.png",
+        "/clients/supiato.png",
+        "/clients/aga-engineering.png",
+        "/clients/kaka.png",
+        "/clients/jay-lifts.png",
+        "/clients/maheshwari.png",
+        "/clients/jenny.png",
+        "/clients/metalit.png",
+      ].map((logo, index) => (
+        <div
+          key={index}
+          className="bg-[#f2f2f2] rounded-xl h-[90px] flex items-center justify-center transition-all duration-300 hover:scale-[1.04]"
+        >
+          <img
+            src={logo}
+            alt="Client logo"
+            className="max-h-[42px] max-w-[80%] object-contain"
+          />
+        </div>
+      ))}
+
+    </div>
+  </div>
+</section>
+
 
 
 
