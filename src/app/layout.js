@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: {
-    default: "YourBrand — Branding, Packaging & Digital Design",
-    template: "%s | YourBrand",
+    default: "FarDesigns — Branding, Packaging & Digital Design",
+    template: "%s | FarDesigns",
   },
   description:
     "Helping businesses grow through branding, premium packaging design, and clean digital experiences.",

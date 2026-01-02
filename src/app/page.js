@@ -21,37 +21,49 @@ export default function Home() {
           className="max-w-5xl text-center"
         >
           <h1 className="text-[42px] sm:text-[56px] leading-tight font-semibold tracking-tight text-black">
-            I design meaningful brands
+            We design meaningful brands
             <br className="hidden sm:block" />
             & digital experiences
           </h1>
 
           <p className="mt-8 max-w-2xl mx-auto text-lg leading-relaxed text-gray-600">
-            Helping businesses grow through thoughtful design, strong visual
+            Helping businesses grow through thou  ghtful design, strong visual
             identity, and conversion-focused websites.
           </p>
 
           <div className="mt-12 flex items-center justify-center gap-4">
-            <button className="px-7 py-3 rounded-full bg-black text-white text-sm font-medium hover:bg-gray-800 transition">
-              View Work
-            </button>
+            <a
+  href="#work"
+  className="px-7 py-3 rounded-full bg-black text-white text-sm font-medium hover:bg-gray-800 transition inline-block"
+>
+  View Work
+</a>
 
-            <button className="px-7 py-3 rounded-full border border-black text-sm font-medium hover:bg-black hover:text-white transition cursor-pointer">
-              Contact Me
-            </button>
+
+          <a
+  href="#contact"
+  className="px-7 py-3 rounded-full border border-black text-sm font-medium hover:bg-black hover:text-white transition inline-block"
+>
+  Contact Me
+</a>
+
+
           </div>
         </motion.section>
       </main>
 
      {/* SERVICES */}
-<section id="services" className="bg-white px-6 py-28">
+<section
+  id="services"
+  className="bg-white px-6 py-32 scroll-mt-24"
+>
   <div className="max-w-6xl mx-auto">
     <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-black">
       Services
     </h2>
 
     <p className="mt-4 max-w-xl text-gray-600">
-      I help brands and businesses stand out through thoughtful design
+      We help brands and businesses stand out through thoughtful design
       and digital experiences.
     </p>
 
@@ -114,7 +126,10 @@ export default function Home() {
 </section>
 
 {/* SELECTED WORK */}
-<section className="bg-white px-6 py-28">
+<section
+  id="work"
+  className="bg-white px-6 py-28 scroll-mt-24"
+>
   <div className="max-w-6xl mx-auto">
 
     <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-black">

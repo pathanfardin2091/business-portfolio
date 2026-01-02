@@ -11,7 +11,7 @@ export default function Navbar() {
         
         {/* Logo */}
         <div className="text-lg font-semibold text-black">
-          YourBrand
+          FarDesigns
         </div>
 
         {/* Desktop Nav */}
