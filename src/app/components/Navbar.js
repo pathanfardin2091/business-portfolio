@@ -29,10 +29,10 @@ export default function Navbar() {
     About
   </a>
 
-          <a href="#services" className="hover:text-black transition">
+          <a href="/#services" className="hover:text-black transition">
             Services
           </a>
-          <a href="#work" className="hover:text-black transition">
+          <a href="work" className="hover:text-black transition">
             Work
           </a>
           <a href="#contact" className="hover:text-black transition">

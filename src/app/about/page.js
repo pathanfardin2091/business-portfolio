@@ -43,6 +43,14 @@ export default function AboutPage() {
     </div>
   </section>
 
+
+      {/* MOBILE SEPARATOR */}
+<div className="block md:hidden my-16">
+  <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
+</div>
+
+
+
   {/* SECTION 2 — IMAGE LEFT / TEXT RIGHT */}
   <section className="px-6 py-32">
     <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">

@@ -23,9 +23,9 @@ export default function WorkPage() {
           {projects.map((project) => (
             <div
               key={project.slug}
-              className="group cursor-pointer group cursor-pointer transition-all duration-300 hover:-translate-y-1"
+              className="group relative cursor-pointer group cursor-pointer transition-all duration-300 hover:-translate-y-1"
             >
-              <div className="w-full aspect-[4/3] rounded-2xl bg-gray-100 overflow-hidden flex items-center justify-center transition-shadow group-hover:shadow-lg ">
+              <div className="relative w-full aspect-[4/3] rounded-2xl bg-gray-100 overflow-hidden flex items-center justify-center transition-shadow group-hover:shadow-lg ">
                 <img
                 src={project.thumbnail}
                 alt={project.title}
@@ -33,6 +33,20 @@ export default function WorkPage() {
                 decoding="async"
                 className="max-w-full max-h-full object-contain"
               />
+
+
+{/* Hover Overlay */}
+<div className="
+  absolute inset-0
+  flex items-center justify-center
+  bg-black/70
+  text-white text-sm font-medium
+  opacity-0
+  group-hover:opacity-100
+  transition-opacity duration-300
+">
+  Case study coming soon
+</div>
 
               </div>
 
