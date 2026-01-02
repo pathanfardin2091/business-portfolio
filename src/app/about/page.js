@@ -7,66 +7,103 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="px-6 py-32 bg-white text-black">
-      <div className="max-w-4xl mx-auto">
+    <main className="bg-white text-black">
 
-        {/* Heading */}
+  {/* SECTION 1 — TEXT LEFT / IMAGE RIGHT */}
+  <section className="px-6 py-32">
+    <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+
+      {/* TEXT */}
+      <div>
         <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight">
-          About Me
+          Who am I?
         </h1>
 
-        {/* Intro */}
         <p className="mt-8 text-lg text-gray-600 leading-relaxed">
-  I’m a graphic designer with over 4 years of experience helping startups
-  and growing businesses build strong brand identities, premium packaging,
-  and clean digital experiences.
-</p>
+          I’m a graphic designer with over 4+ years of experience helping
+          startups and growing businesses build strong brand identities,
+          premium packaging, and clean digital experiences.
+        </p>
 
-<p className="mt-4 text-lg text-gray-600 leading-relaxed">
-  My approach is simple — understand the business, design with clarity,
-  and deliver work that looks good and performs well.
-</p>
-
-
-        {/* What I Do */}
-        <div className="mt-16 space-y-4">
-          <h2 className="text-2xl font-semibold">
-            What I do
-          </h2>
-
-          <ul className="mt-6 space-y-3 text-gray-700 list-disc list-inside">
-            <li>Brand identity & logo design</li>
-            <li>Packaging design (consumer & retail)</li>
-            <li>Website & UI design</li>
-            <li>Design systems & visual consistency</li>
-          </ul>
-        </div>
-
-        {/* Experience */}
-        <p className="mt-6 text-gray-700 leading-relaxed">
-  Over the years, I’ve collaborated with founders, marketers, and product
-  teams to create design systems that are practical, scalable, and visually
-  consistent.
-</p>
-
-<p className="mt-4 text-gray-700">
-  Tools I regularly work with include Adobe Illustrator, Photoshop, Figma,
-  Pacdora, and modern web tools.
-</p>
-
-
-        {/* CTA */}
-        <div className="mt-20">
-          <a
-            href="mailto:fardesiggns@gmail.com"
-            className="inline-block px-10 py-4 rounded-full bg-black text-white
-                       text-sm font-medium hover:bg-gray-800 transition"
-          >
-            Let’s work together
-          </a>
-        </div>
-
+        <p className="mt-4 text-lg text-gray-600 leading-relaxed">
+          My approach is simple — understand the business, design with clarity,
+          and deliver work that looks good and performs well.
+        </p>
       </div>
-    </main>
+
+      {/* IMAGE */}
+      <div className="rounded-2xl overflow-hidden bg-gray-100">
+        <img
+          src="/about/profile.jpg"
+          alt="About me"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
+    </div>
+  </section>
+
+  {/* SECTION 2 — IMAGE LEFT / TEXT RIGHT */}
+  <section className="px-6 py-32">
+    <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+{/* IMAGE */}
+      <div className="rounded-2xl overflow-hidden bg-gray-100">
+        <img
+          src="/about/profile2.jpg"
+          alt="About me"
+          className="w-full h-full object-cover"
+        />
+      </div>
+      {/* TEXT */}
+      <div>
+        <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight">
+          Who am I?
+        </h1>
+
+        <p className="mt-8 text-lg text-gray-600 leading-relaxed">
+          I’m a graphic designer with over 4+ years of experience helping
+          startups and growing businesses build strong brand identities,
+          premium packaging, and clean digital experiences.
+        </p>
+
+        <p className="mt-4 text-lg text-gray-600 leading-relaxed">
+          My approach is simple — understand the business, design with clarity,
+          and deliver work that looks good and performs well.
+        </p>
+      </div>
+
+      
+
+    </div>
+  </section>
+
+  {/* SECTION 3 — CTA */}
+  <section className="px-6 py-32">
+    <div className="max-w-4xl mx-auto text-center">
+
+      <h2 className="text-3xl font-semibold">
+        Let’s work together
+      </h2>
+
+      <p className="mt-6 text-gray-600 text-lg">
+        If you’re looking for a designer who understands business and design,
+        let’s talk.
+      </p>
+
+      <div className="mt-10">
+        <a
+          href="mailto:fardesiggns@gmail.com"
+          className="inline-block px-12 py-4 rounded-full bg-black text-white
+                     text-sm font-medium hover:bg-gray-800 transition"
+        >
+          Start a project
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
   );
 }

@@ -1,5 +1,6 @@
 "use client";
-
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 export default function Navbar() {
@@ -10,9 +11,16 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         
         {/* Logo */}
-        <div className="text-lg font-semibold text-black">
-          FarDesigns
-        </div>
+    {/* const pathname = usePathname(); */}
+
+<a
+  href="/"
+  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+  className="text-lg font-semibold text-black select-none cursor-pointer"
+>
+  FarDesign
+</a>
+
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8 text-sm text-gray-600">
