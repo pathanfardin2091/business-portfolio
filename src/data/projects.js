@@ -55,4 +55,49 @@ export const projects = [
     seoDescription:
       "Premium packaging design showcasing structure, branding, and visual consistency.",
   },
+
+  {
+    slug: "manta-brand-identity",
+    title: "Brand Identity",
+    category: "Branding",
+    description: "Logo and visual identity system for a startup.",
+    thumbnail: "/work/manta.jpg",
+
+    // ✅ ADD THIS
+    heroImage: "/work/brochure.jpg",
+
+    seoTitle: "Packaging Design Case Study | Your Name",
+    seoDescription:
+      "Premium packaging design showcasing structure, branding, and visual consistency.",
+  },
+
+  {
+    slug: "noormehfil-brand-identity",
+    title: "Brand Identity",
+    category: "Branding",
+    description: "Logo and visual identity system for a startup.",
+    thumbnail: "/work/noormehfil.jpg",
+
+    // ✅ ADD THIS
+    heroImage: "/work/brochure.jpg",
+
+    seoTitle: "Packaging Design Case Study | Your Name",
+    seoDescription:
+      "Premium packaging design showcasing structure, branding, and visual consistency.",
+  },
+
+  {
+    slug: "perfect-spaces-brand-identity",
+    title: "Brand Identity",
+    category: "Branding",
+    description: "Logo and visual identity system for a startup.",
+    thumbnail: "/work/perfectspaces.jpg",
+
+    // ✅ ADD THIS
+    heroImage: "/work/perfectspaces.jpg",
+
+    seoTitle: "Packaging Design Case Study | Your Name",
+    seoDescription:
+      "Premium packaging design showcasing structure, branding, and visual consistency.",
+  },
 ];
