@@ -201,6 +201,22 @@ export default function Home() {
         </p>
       </motion.div>
 
+      {/* Card 9 */}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.25, ease: "easeOut" }}
+        viewport={{ once: true }}
+        className="w-full h-full text-left border border-gray-200 rounded-2xl p-8 hover:border-black transition group cursor-pointer transition-transform duration-300 hover:-translate-y-1"
+      >
+        <h3 className="text-xl font-medium text-black">
+          Website Development
+        </h3>
+        <p className="mt-3 text-gray-600 text-sm leading-relaxed">
+          Clean, responsive websites built for speed, usability, and a professional brand presence. Designed to work smoothly across all devices and grow with your business.
+        </p>
+      </motion.div>
+
     </div>
   </div>
 </section>
