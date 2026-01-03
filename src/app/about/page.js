@@ -1,3 +1,4 @@
+
 export const metadata = {
   title: "About — YourBrand | Branding & Packaging Designer",
   description:
@@ -30,48 +31,73 @@ export default function AboutPage() {
       </p>
     </div>
 
-    {/* Social Icons */}
-    <div className="flex items-center gap-4">
+  {/* Social Icons */}
+<div className="flex items-center gap-4">
 
-      {/* Instagram */}
-      <a
-        href="https://www.instagram.com/yourusername"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Instagram"
-        className="text-gray-500 hover:text-black transition"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          className="w-8 h-8"
-        >
-          <path d="M7.75 2h8.5C19.55 2 22 4.45 22 7.75v8.5C22 19.55 19.55 22 16.25 22h-8.5C4.45 22 2 19.55 2 16.25v-8.5C2 4.45 4.45 2 7.75 2zm0 1.5A4.26 4.26 0 003.5 7.75v8.5A4.26 4.26 0 007.75 20.5h8.5a4.26 4.26 0 004.25-4.25v-8.5a4.26 4.26 0 00-4.25-4.25h-8.5z"/>
-          <path d="M12 7a5 5 0 110 10 5 5 0 010-10zm0 1.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7z"/>
-          <circle cx="17.5" cy="6.5" r="1"/>
-        </svg>
-      </a>
+  {/* Instagram */}
+  <a
+    href="https://www.instagram.com/dziner_ai/"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Instagram"
+    className="transition hover:opacity-80"
+  >
+    <img
+      src="/icons/instagram.png"
+      alt="Instagram"
+      className="w-8 h-8"
+    />
+  </a>
 
-      {/* LinkedIn */}
-      <a
-        href="https://www.linkedin.com/in/yourusername"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="LinkedIn"
-        className="text-gray-500 hover:text-black transition"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          className="w-8 h-8"
-        >
-          <path d="M4.98 3.5a2.5 2.5 0 11-.01 5.01 2.5 2.5 0 01.01-5.01zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.84-2.05 3.79-2.05C20.4 8.65 22 11 22 14.3V21h-4v-6c0-1.43-.03-3.27-2-3.27-2 0-2.3 1.56-2.3 3.16V21H9z"/>
-        </svg>
-      </a>
+  {/* LinkedIn */}
+  <a
+    href="https://www.linkedin.com/in/pathanfardin/"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="LinkedIn"
+    className="transition hover:opacity-80"
+  >
+    <img
+      src="/icons/linkedin.png"
+      alt="LinkedIn"
+      className="w-8 h-8"
+    />
+  </a>
 
-    </div>
+  {/* YouTube */}
+  <a
+    href="https://www.youtube.com/@FARDINSAMPATHAN"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="YouTube"
+    className="transition hover:opacity-80"
+  >
+    <img
+      src="/icons/youtube.png"
+      alt="YouTube"
+      className="w-8 h-8"
+    />
+  </a>
+
+  {/* Behance */}
+  <a
+    href="https://www.behance.net/fardinpathan7"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Behance"
+    className="transition hover:opacity-80"
+  >
+    <img
+      src="/icons/behance.png"
+      alt="Behance"
+      className="w-8 h-8"
+    />
+  </a>
+
+</div>
+
+
+    
   </div>
 
   {/* Description */}
@@ -136,47 +162,72 @@ export default function AboutPage() {
     </div>
 
     {/* Social Icons */}
-    <div className="flex items-center gap-4">
+      {/* Social Icons */}
+<div className="flex items-center gap-4">
 
-      {/* Instagram */}
-      <a
-        href="https://www.instagram.com/yourusername"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Instagram"
-        className="text-gray-500 hover:text-black transition"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          className="w-8 h-8"
-        >
-          <path d="M7.75 2h8.5C19.55 2 22 4.45 22 7.75v8.5C22 19.55 19.55 22 16.25 22h-8.5C4.45 22 2 19.55 2 16.25v-8.5C2 4.45 4.45 2 7.75 2zm0 1.5A4.26 4.26 0 003.5 7.75v8.5A4.26 4.26 0 007.75 20.5h8.5a4.26 4.26 0 004.25-4.25v-8.5a4.26 4.26 0 00-4.25-4.25h-8.5z"/>
-          <path d="M12 7a5 5 0 110 10 5 5 0 010-10zm0 1.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7z"/>
-          <circle cx="17.5" cy="6.5" r="1"/>
-        </svg>
-      </a>
+  {/* Instagram */}
+  <a
+    href="https://www.instagram.com/waajibul_cuddle/"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Instagram"
+    className="transition hover:opacity-80"
+  >
+    <img
+      src="/icons/instagram.png"
+      alt="Instagram"
+      className="w-8 h-8"
+    />
+  </a>
 
-      {/* LinkedIn */}
-      <a
-        href="https://www.linkedin.com/in/yourusername"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="LinkedIn"
-        className="text-gray-500 hover:text-black transition"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          className="w-8 h-8"
-        >
-          <path d="M4.98 3.5a2.5 2.5 0 11-.01 5.01 2.5 2.5 0 01.01-5.01zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.84-2.05 3.79-2.05C20.4 8.65 22 11 22 14.3V21h-4v-6c0-1.43-.03-3.27-2-3.27-2 0-2.3 1.56-2.3 3.16V21H9z"/>
-        </svg>
-      </a>
+  {/* LinkedIn */}
+  <a
+    href="https://www.linkedin.com/in/junaid-sayyed-1a483989/"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="LinkedIn"
+    className="transition hover:opacity-80"
+  >
+    <img
+      src="/icons/linkedin.png"
+      alt="LinkedIn"
+      className="w-8 h-8"
+    />
+  </a>
 
-    </div>
+  {/* YouTube */}
+  {/* <a
+    href="https://www.youtube.com/@FARDINSAMPATHAN"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="YouTube"
+    className="transition hover:opacity-80"
+  >
+    <img
+      src="/icons/youtube.png"
+      alt="YouTube"
+      className="w-8 h-8"
+    />
+  </a> */}
+
+  {/* Behance */}
+  <a
+    href="https://www.behance.net/JunaidSayyed03"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Behance"
+    className="transition hover:opacity-80"
+  >
+    <img
+      src="/icons/behance.png"
+      alt="Behance"
+      className="w-8 h-8"
+    />
+  </a>
+
+</div>
+
+
   </div>
 
   {/* Description */}
