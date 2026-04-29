@@ -1,281 +1,176 @@
+import Image from "next/image";
 
 export const metadata = {
-  title: "About — YourBrand | Branding & Packaging Designer",
+  title: "About | FarDesign",
   description:
-    "Learn more about YourBrand, a graphic designer specializing in branding, premium packaging, and digital design for startups and growing businesses.",
+    "Learn more about FarDesign, a creative design portfolio specializing in branding, packaging, motion graphics, and digital design.",
 };
 
+const fardinLinks = [
+  {
+    href: "https://www.instagram.com/dziner_ai/",
+    label: "Instagram",
+    icon: "/icons/instagram.png",
+  },
+  {
+    href: "https://www.linkedin.com/in/pathanfardin/",
+    label: "LinkedIn",
+    icon: "/icons/linkedin.png",
+  },
+  {
+    href: "https://www.youtube.com/@FARDINSAMPATHAN",
+    label: "YouTube",
+    icon: "/icons/youtube.png",
+  },
+  {
+    href: "https://www.behance.net/fardinpathan7",
+    label: "Behance",
+    icon: "/icons/behance.png",
+  },
+];
+
+const junaidLinks = [
+  {
+    href: "https://www.instagram.com/waajibul_cuddle/",
+    label: "Instagram",
+    icon: "/icons/instagram.png",
+  },
+  {
+    href: "https://www.linkedin.com/in/junaid-sayyed-1a483989/",
+    label: "LinkedIn",
+    icon: "/icons/linkedin.png",
+  },
+  {
+    href: "https://www.behance.net/JunaidSayyed03",
+    label: "Behance",
+    icon: "/icons/behance.png",
+  },
+];
 
 export default function AboutPage() {
   return (
     <main className="bg-white text-black">
+      <ProfileSection
+        name="Fardin Pathan"
+        role="Creative Designer | Motion Designer"
+        image="/about/profile.jpg"
+        imageAlt="Fardin Pathan"
+        socialLinks={fardinLinks}
+        paragraphs={[
+          "Hi, I'm Fardin Pathan, a graphic designer with 4+ years of experience in branding, social media design, motion graphics, and creative projects. I specialize in crafting impactful visuals that blend innovation, aesthetics, and strategic thinking to help businesses stand out.",
+          "My approach is simple: understand the business, design with clarity, and deliver work that looks good and performs well.",
+        ]}
+      />
 
-  {/* SECTION 1 — TEXT LEFT / IMAGE RIGHT */}
-  <section className="px-6 py-32">
-    <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-
-      {/* TEXT */}
-      <div className="flex flex-col gap-6">
-
-  {/* Name + Role + Social */}
-  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-
-    {/* Name + Role */}
-    <div>
-      <h1 className="text-4xl sm:text-3xl font-semibold tracking-tight text-black">
-        Fardin Pathan
-      </h1>
-
-      <p className="mt-1 text-sm text-gray-500">
-        Creative Designer | Motion Designer   
-      </p>
-    </div>
-
-  {/* Social Icons */}
-<div className="flex items-center gap-4">
-
-  {/* Instagram */}
-  <a
-    href="https://www.instagram.com/dziner_ai/"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Instagram"
-    className="transition hover:opacity-80"
-  >
-    <img
-      src="/icons/instagram.png"
-      alt="Instagram"
-      className="w-8 h-8"
-    />
-  </a>
-
-  {/* LinkedIn */}
-  <a
-    href="https://www.linkedin.com/in/pathanfardin/"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="LinkedIn"
-    className="transition hover:opacity-80"
-  >
-    <img
-      src="/icons/linkedin.png"
-      alt="LinkedIn"
-      className="w-8 h-8"
-    />
-  </a>
-
-  {/* YouTube */}
-  <a
-    href="https://www.youtube.com/@FARDINSAMPATHAN"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="YouTube"
-    className="transition hover:opacity-80"
-  >
-    <img
-      src="/icons/youtube.png"
-      alt="YouTube"
-      className="w-8 h-8"
-    />
-  </a>
-
-  {/* Behance */}
-  <a
-    href="https://www.behance.net/fardinpathan7"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Behance"
-    className="transition hover:opacity-80"
-  >
-    <img
-      src="/icons/behance.png"
-      alt="Behance"
-      className="w-8 h-8"
-    />
-  </a>
-
-</div>
-
-
-    
-  </div>
-
-  {/* Description */}
-  <p className="text-lg text-gray-600 leading-relaxed">
-    Hi, I’m Fardin Pathan, a graphic designer with 4+ years of experience in branding, social media design, motion graphics, and creative projects. I specialize in crafting impactful visuals that blend innovation, aesthetics, and strategic thinking to help businesses stand out. From brand identities and motion-led visuals to marketing materials, I deliver designs that are purpose-driven, engaging, and built to create real brand value
-  </p>
-
-  <p className="text-lg text-gray-600 leading-relaxed">
-    My approach is simple- understand the business, design with clarity,
-    and deliver work that looks good and performs well.
-  </p>
-
-</div>
-
-
-      {/* IMAGE */}
-      <div className="rounded-2xl overflow-hidden bg-gray-100">
-        <img
-          src="/about/profile.jpg"
-          alt="About me"
-          className="w-full h-full object-cover"
-        />
+      <div className="my-16 block md:hidden">
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
       </div>
 
-    </div>
-  </section>
+      <ProfileSection
+        reverse
+        name="Junaid Sayyed"
+        role="Graphic Designer & Branding Expert"
+        image="/about/profile2.jpg"
+        imageAlt="Junaid Sayyed"
+        socialLinks={junaidLinks}
+        paragraphs={[
+          "Hi, I'm Junaid Sayyed, a graphic designer with 10+ years of experience in print and digital design across multiple industries.",
+          "My work includes branding, marketing creatives, catalogues, packaging, brochures, social media content, presentations, and promotional materials. I've collaborated on projects for brands such as EPC Mahindra, GreatWhite Electricals, and the Ashoka Group of Schools.",
+          "Having worked with clients from diverse sectors, I focus on creating designs that are clear, consistent, and visually impactful.",
+        ]}
+      />
 
+      <section className="px-6 py-32">
+        <div className="mx-auto max-w-4xl text-center">
+          <h2 className="text-3xl font-semibold">Let&apos;s work together</h2>
 
-      {/* MOBILE SEPARATOR */}
-<div className="block md:hidden my-16">
-  <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
-</div>
+          <p className="mt-6 text-lg text-gray-600">
+            If you&apos;re looking for designers who understand business and
+            design, let&apos;s talk.
+          </p>
 
+          <div className="mt-10">
+            <a
+              href="mailto:fardesiggns@gmail.com"
+              className="inline-block rounded-full bg-black px-12 py-4 text-sm font-medium text-white transition hover:bg-gray-800"
+            >
+              Start a project
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
 
-
-  {/* SECTION 2 — IMAGE LEFT / TEXT RIGHT */}
-  <section className="px-6 py-32">
-    <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-{/* IMAGE */}
-      <div className="rounded-2xl overflow-hidden bg-gray-100">
-        <img
-          src="/about/profile2.jpg"
-          alt="About me"
-          className="w-full h-full object-cover"
-        />
-      </div>
-      {/* TEXT */}
-      <div className="flex flex-col gap-6">
-
-  {/* Name + Role + Social */}
-  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-
-    {/* Name + Role */}
-    <div>
-      <h1 className="text-4xl sm:text-3xl font-semibold tracking-tight text-black">
-        Junaid Sayyed
-      </h1>
-
-      <p className="mt-1 text-sm text-gray-500">
-        Graphic Designer & Branding Expert
-      </p>
-    </div>
-
-    {/* Social Icons */}
-      {/* Social Icons */}
-<div className="flex items-center gap-4">
-
-  {/* Instagram */}
-  <a
-    href="https://www.instagram.com/waajibul_cuddle/"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Instagram"
-    className="transition hover:opacity-80"
-  >
-    <img
-      src="/icons/instagram.png"
-      alt="Instagram"
-      className="w-8 h-8"
-    />
-  </a>
-
-  {/* LinkedIn */}
-  <a
-    href="https://www.linkedin.com/in/junaid-sayyed-1a483989/"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="LinkedIn"
-    className="transition hover:opacity-80"
-  >
-    <img
-      src="/icons/linkedin.png"
-      alt="LinkedIn"
-      className="w-8 h-8"
-    />
-  </a>
-
-  {/* YouTube */}
-  {/* <a
-    href="https://www.youtube.com/@FARDINSAMPATHAN"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="YouTube"
-    className="transition hover:opacity-80"
-  >
-    <img
-      src="/icons/youtube.png"
-      alt="YouTube"
-      className="w-8 h-8"
-    />
-  </a> */}
-
-  {/* Behance */}
-  <a
-    href="https://www.behance.net/JunaidSayyed03"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Behance"
-    className="transition hover:opacity-80"
-  >
-    <img
-      src="/icons/behance.png"
-      alt="Behance"
-      className="w-8 h-8"
-    />
-  </a>
-
-</div>
-
-
-  </div>
-
-  {/* Description */}
-  <p className="text-lg text-gray-600 leading-relaxed">
-    Hi I'm Junaid Sayyed, a graphic designer with 10+ years of experience in print and digital design across multiple industries.
-
-My work includes branding, marketing creatives, catalogues, packaging, brochures, social media content, presentations, and promotional materials. I’ve collaborated on projects for well-known brands such as EPC Mahindra, GreatWhite Electricals, and the Ashoka Group of Schools, delivering visuals that align with brand identity and business goals.
-  </p>
-
-  <p className="text-lg text-gray-600 leading-relaxed">
-    Having worked with clients from diverse sectors, I focus on creating designs that are clear, consistent, and visually impactful. I believe good design is not just about aesthetics, but about communication that adds real value.
-  </p>
-
-</div>
-
-
-      
-
-    </div>
-  </section>
-
-  {/* SECTION 3 — CTA */}
-  <section className="px-6 py-32">
-    <div className="max-w-4xl mx-auto text-center">
-
-      <h2 className="text-3xl font-semibold">
-        Let’s work together
-      </h2>
-
-      <p className="mt-6 text-gray-600 text-lg">
-        If you’re looking for a designer who understands business and design,
-        let’s talk.
-      </p>
-
-      <div className="mt-10">
-        <a
-          href="mailto:fardesiggns@gmail.com"
-          className="inline-block px-12 py-4 rounded-full bg-black text-white
-                     text-sm font-medium hover:bg-gray-800 transition"
+function ProfileSection({
+  reverse = false,
+  name,
+  role,
+  image,
+  imageAlt,
+  socialLinks,
+  paragraphs,
+}) {
+  return (
+    <section className="px-6 py-32">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-16 md:grid-cols-2">
+        <div
+          className={`relative aspect-[4/5] overflow-hidden rounded-2xl bg-gray-100 ${
+            reverse ? "md:order-1" : "md:order-2"
+          }`}
         >
-          Start a project
-        </a>
+          <Image
+            src={image}
+            alt={imageAlt}
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
+          />
+        </div>
+
+        <div
+          className={`flex flex-col gap-6 ${
+            reverse ? "md:order-2" : "md:order-1"
+          }`}
+        >
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h1 className="text-4xl font-semibold tracking-tight text-black sm:text-3xl">
+                {name}
+              </h1>
+              <p className="mt-1 text-sm text-gray-500">{role}</p>
+            </div>
+
+            <div className="flex items-center gap-4">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={link.label}
+                  className="transition hover:opacity-80"
+                >
+                  <Image
+                    src={link.icon}
+                    alt=""
+                    width={32}
+                    height={32}
+                    className="h-8 w-8"
+                  />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {paragraphs.map((paragraph) => (
+            <p key={paragraph} className="text-lg leading-relaxed text-gray-600">
+              {paragraph}
+            </p>
+          ))}
+        </div>
       </div>
-
-    </div>
-  </section>
-
-</main>
-
+    </section>
   );
 }

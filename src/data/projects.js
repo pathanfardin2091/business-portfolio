@@ -5,25 +5,19 @@ export const projects = [
     category: "Packaging",
     description: "Premium box packaging concept for a Korean brand.",
     thumbnail: "/work/packaging.jpg",
-
-    // ✅ ADD THIS
     heroImage: "/work/packaging.jpg",
-
-    seoTitle: "Packaging Design Case Study | Your Name",
+    seoTitle: "Packaging Design Case Study | FarDesign",
     seoDescription:
       "Premium packaging design showcasing structure, branding, and visual consistency.",
   },
   {
     slug: "brand-identity",
-    title: "Brand Identity",
+    title: "Hydrabadi Brand Identity",
     category: "Branding",
     description: "Logo and visual identity system for a startup.",
     thumbnail: "/work/hydrabadi logo.jpg",
-
-    // ✅ ADD THIS
-    heroImage: "/work/packaging.jpg",
-
-    seoTitle: "Brand Identity Case Study | Your Name",
+    heroImage: "/work/hydrabadi logo.jpg",
+    seoTitle: "Brand Identity Case Study | FarDesign",
     seoDescription:
       "Brand identity project covering logo, colors, typography, and guidelines.",
   },
@@ -31,13 +25,10 @@ export const projects = [
     slug: "dearshe-packaging-design",
     title: "Dear She Packaging Design",
     category: "Packaging",
-    description: "Premium box packaging concept for a Beauty brand.",
+    description: "Premium box packaging concept for a beauty brand.",
     thumbnail: "/work/dearshe.jpg",
-
-    // ✅ ADD THIS
     heroImage: "/work/dearshe.jpg",
-
-    seoTitle: "Packaging Design Case Study | Your Name",
+    seoTitle: "Dear She Packaging Design Case Study | FarDesign",
     seoDescription:
       "Premium packaging design showcasing structure, branding, and visual consistency.",
   },
@@ -45,59 +36,44 @@ export const projects = [
     slug: "brochure-design",
     title: "Brochure Design",
     category: "Brochure",
-    description: "Modern Clearn and minimal Brochure Design .",
+    description: "Modern, clean, and minimal brochure design.",
     thumbnail: "/work/brochure.jpg",
-
-    // ✅ ADD THIS
     heroImage: "/work/brochure.jpg",
-
-    seoTitle: "Packaging Design Case Study | Your Name",
+    seoTitle: "Brochure Design Case Study | FarDesign",
     seoDescription:
-      "Premium packaging design showcasing structure, branding, and visual consistency.",
+      "Brochure design showcasing layout, hierarchy, and visual consistency.",
   },
-
   {
     slug: "manta-brand-identity",
-    title: "Brand Identity",
+    title: "Manta Brand Identity",
     category: "Branding",
     description: "Logo and visual identity system for a startup.",
     thumbnail: "/work/manta.jpg",
-
-    // ✅ ADD THIS
-    heroImage: "/work/brochure.jpg",
-
-    seoTitle: "Packaging Design Case Study | Your Name",
+    heroImage: "/work/manta.jpg",
+    seoTitle: "Manta Brand Identity Case Study | FarDesign",
     seoDescription:
-      "Premium packaging design showcasing structure, branding, and visual consistency.",
+      "Brand identity project covering logo, colors, typography, and guidelines.",
   },
-
   {
     slug: "noormehfil-brand-identity",
-    title: "Brand Identity",
+    title: "Noor Mehfil Brand Identity",
     category: "Branding",
     description: "Logo and visual identity system for a startup.",
     thumbnail: "/work/noormehfil.jpg",
-
-    // ✅ ADD THIS
-    heroImage: "/work/brochure.jpg",
-
-    seoTitle: "Packaging Design Case Study | Your Name",
+    heroImage: "/work/noormehfil.jpg",
+    seoTitle: "Noor Mehfil Brand Identity Case Study | FarDesign",
     seoDescription:
-      "Premium packaging design showcasing structure, branding, and visual consistency.",
+      "Brand identity project covering logo, colors, typography, and guidelines.",
   },
-
   {
     slug: "perfect-spaces-brand-identity",
-    title: "Brand Identity",
+    title: "Perfect Spaces Brand Identity",
     category: "Branding",
-    description: "Logo and visual identity system for a startup.",
+    description: "Logo and visual identity system for an interior brand.",
     thumbnail: "/work/perfectspaces.jpg",
-
-    // ✅ ADD THIS
     heroImage: "/work/perfectspaces.jpg",
-
-    seoTitle: "Packaging Design Case Study | Your Name",
+    seoTitle: "Perfect Spaces Brand Identity Case Study | FarDesign",
     seoDescription:
-      "Premium packaging design showcasing structure, branding, and visual consistency.",
+      "Brand identity project covering logo, colors, typography, and guidelines.",
   },
 ];
