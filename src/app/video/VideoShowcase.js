@@ -31,8 +31,62 @@ function getYouTubeVideoId(embedUrl) {
   const embedMatch = embedUrl.match(/\/embed\/([^?&]+)/);
   const shortMatch = embedUrl.match(/youtu\.be\/([^?&]+)/);
   const watchMatch = embedUrl.match(/[?&]v=([^&]+)/);
+  const shortsMatch = embedUrl.match(/\/shorts\/([^?&]+)/);
 
-  return embedMatch?.[1] || shortMatch?.[1] || watchMatch?.[1] || "";
+  return (
+    embedMatch?.[1] ||
+    shortMatch?.[1] ||
+    watchMatch?.[1] ||
+    shortsMatch?.[1] ||
+    ""
+  );
+}
+
+function getInstagramEmbedUrl(url) {
+  const match = url.match(/instagram\.com\/(p|reel|tv)\/([^/?#]+)/);
+
+  return match ? `https://www.instagram.com/${match[1]}/${match[2]}/embed` : "";
+}
+
+function getPinterestEmbedUrl(url) {
+  const pinMatch = url.match(/pinterest\.[^/]+\/pin\/(\d+)/);
+
+  return pinMatch
+    ? `https://assets.pinterest.com/ext/embed.html?id=${pinMatch[1]}`
+    : "";
+}
+
+function getVideoUrl(video) {
+  return video.videoUrl || video.embedUrl || "";
+}
+
+function getEmbedUrl(video) {
+  const url = getVideoUrl(video);
+  const youtubeId = getYouTubeVideoId(url);
+
+  if (youtubeId) {
+    return `https://www.youtube-nocookie.com/embed/${youtubeId}`;
+  }
+
+  return getInstagramEmbedUrl(url) || getPinterestEmbedUrl(url) || url;
+}
+
+function getVideoProvider(video) {
+  const url = getVideoUrl(video);
+
+  if (getYouTubeVideoId(url)) {
+    return "YouTube";
+  }
+
+  if (url.includes("instagram.com")) {
+    return "Instagram";
+  }
+
+  if (url.includes("pinterest.") || url.includes("pin.it")) {
+    return "Pinterest";
+  }
+
+  return "Video";
 }
 
 function getVideoThumbnail(video) {
@@ -40,7 +94,7 @@ function getVideoThumbnail(video) {
     return video.thumbnail;
   }
 
-  const youtubeId = getYouTubeVideoId(video.embedUrl);
+  const youtubeId = getYouTubeVideoId(getVideoUrl(video));
 
   return youtubeId ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg` : "";
 }
@@ -188,7 +242,9 @@ export default function VideoShowcase({ videos }) {
                   key={skill}
                   drag
                   dragConstraints={heroRef}
-                  dragElastic={0.08}
+                  dragElastic={0.18}
+                  dragMomentum={false}
+                  dragSnapToOrigin
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.16 + index * 0.08 }}
@@ -262,6 +318,7 @@ export default function VideoShowcase({ videos }) {
 
 function VideoCard({ video, isDark, hasLiked, likes, onOpen, onToggleLike }) {
   const thumbnail = getVideoThumbnail(video);
+  const provider = getVideoProvider(video);
 
   return (
     <article
@@ -282,7 +339,19 @@ function VideoCard({ video, isDark, hasLiked, likes, onOpen, onToggleLike }) {
           }`}
           style={thumbnail ? { backgroundImage: `url(${thumbnail})` } : undefined}
         >
+          {!thumbnail ? (
+            <div
+              className={`absolute inset-0 ${
+                isDark
+                  ? "bg-gradient-to-br from-[#1d1426] via-[#171018] to-[#4d3b1f]"
+                  : "bg-gradient-to-br from-gray-900 via-gray-700 to-gray-950"
+              }`}
+            />
+          ) : null}
           <div className="absolute inset-0 bg-black/20 transition group-hover:bg-black/50" />
+          <div className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-black">
+            {provider}
+          </div>
           <div className="absolute inset-0 flex items-center justify-center opacity-0 transition group-hover:opacity-100">
             <span className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-black">
               Play
@@ -397,7 +466,7 @@ function VideoOverlay({
                 >
                   <iframe
                     className="h-full w-full"
-                    src={video.embedUrl}
+                    src={getEmbedUrl(video)}
                     title={video.title}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen

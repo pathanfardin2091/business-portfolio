@@ -1,5 +1,14 @@
 // Add new videos by copying one object and pasting it inside this array.
-// Only change the text values. Keep every id unique, like video-3, video-4, video-5.
+// Keep every id unique, like video-3, video-4, video-5.
+//
+// You can paste:
+// - YouTube watch, shorts, youtu.be, or embed links
+// - Instagram reel/post/tv links
+// - Full Pinterest pin links, like https://www.pinterest.com/pin/1234567890/
+// - Any direct embed URL that works inside an iframe
+//
+// Note: Pinterest short links like https://pin.it/... cannot always be embedded
+// directly. Open the pin and paste the full pinterest.com/pin/... link instead.
 //
 // Template:
 // {
@@ -7,9 +16,9 @@
 //   title: "Your Video Title",
 //   type: "Reel",
 //   description: "Short description of the work.",
-//   embedUrl: "https://www.youtube.com/embed/YOUR_VIDEO_ID",
+//   videoUrl: "https://www.youtube.com/watch?v=YOUR_VIDEO_ID",
 //   ratio: "portrait", // use "portrait" for reels, "landscape" for wide videos
-//   thumbnail: "", // optional: add a custom image path if you do not want the YouTube thumbnail
+//   thumbnail: "", // optional, useful for Instagram/Pinterest cards
 //   startingLikes: 0,
 // },
 
@@ -20,9 +29,9 @@ export const videos = [
     type: "Landscape Video",
     description:
       "A polished brand video edit focused on pacing, clean transitions, and product-led storytelling.",
-    embedUrl: "https://www.youtube.com/embed/OLV3NGmVR7k",
-    ratio: "landscape",
-    startingLikes: 24,
+    videoUrl: "https://youtube.com/shorts/lsEp0gHTjbE?feature=share",
+    ratio: "portrait",
+    startingLikes: 0,
   },
   {
     id: "video-2",
@@ -30,8 +39,12 @@ export const videos = [
     type: "Reel",
     description:
       "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
-    embedUrl: "https://www.youtube.com/embed/OLV3NGmVR7k",
+    videoUrl: "https://youtu.be/13k1p0oCR1g?si=nu5ZgTj3qxuuZYu2",
+    
     ratio: "portrait",
-    startingLikes: 18,
+    startingLikes: 0,
   },
+  
 ];
+
+
