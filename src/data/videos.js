@@ -22,178 +22,293 @@
 //   startingLikes: 0,
 // },
 
-export const videos = [
-  {
-    id: "video-1",
-    title: "Brand Ad Edit",
-    type: "Reel",
-    description:
-      "A polished brand video edit focused on pacing, clean transitions, and product-led storytelling.",
-    videoUrl: "https://youtube.com/shorts/lsEp0gHTjbE?feature=share",
-    ratio: "portrait",
-    startingLikes: 0,
-  },
-  {
-    id: "video-2",
-    title: "Social Reel",
-    type: "Reel",
-    description:
-      "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
-    videoUrl: "https://youtu.be/13k1p0oCR1g?si=nu5ZgTj3qxuuZYu2",
-    
-    ratio: "portrait",
-    startingLikes: 0,
-  },
-   {
-    id: "video-3",
-    title: "Social Reel",
-    type: "Reel",
-    description:
-      "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
-    videoUrl: "https://youtube.com/shorts/VoGkbs9e_bA?si=12Lk8Hb_45yvWATD",
-    
-    ratio: "portrait",
-    startingLikes: 0,
-  },
-     {
-    id: "video-4",
-    title: "Social Reel",
-    type: "Reel",
-    description:
-      "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
-    videoUrl: "https://youtube.com/shorts/5RJX7uVQqMU",
-    
-    ratio: "portrait",
-    startingLikes: 0,
-  },
 
-     {
-    id: "video-5",
-    title: "Social Reel",
-    type: "Reel",
-    description:
-      "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
-    videoUrl: "https://youtube.com/shorts/ePH2y6H1ii0?si=5TAPqvomac8P937J",
+
+
+
+
+
+
+
+// export const videos = [
+//   {
+//     id: "video-1",
+//     title: "Brand Ad Edit",
+//     type: "Reel",
+//     description:
+//       "A polished brand video edit focused on pacing, clean transitions, and product-led storytelling.",
+//     videoUrl: "https://youtube.com/shorts/lsEp0gHTjbE?feature=share",
+//     ratio: "portrait",
+//     startingLikes: 0,
+//   },
+//   {
+//     id: "video-2",
+//     title: "Social Reel",
+//     type: "Reel",
+//     description:
+//       "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
+//     videoUrl: "https://youtu.be/13k1p0oCR1g?si=nu5ZgTj3qxuuZYu2",
     
-    ratio: "portrait",
-    startingLikes: 0,
-  },
+//     ratio: "portrait",
+//     startingLikes: 0,
+//   },
+//    {
+//     id: "video-3",
+//     title: "Social Reel",
+//     type: "Reel",
+//     description:
+//       "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
+//     videoUrl: "https://youtube.com/shorts/VoGkbs9e_bA?si=12Lk8Hb_45yvWATD",
+    
+//     ratio: "portrait",
+//     startingLikes: 0,
+//   },
+//      {
+//     id: "video-4",
+//     title: "Social Reel",
+//     type: "Reel",
+//     description:
+//       "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
+//     videoUrl: "https://youtube.com/shorts/5RJX7uVQqMU",
+    
+//     ratio: "portrait",
+//     startingLikes: 0,
+//   },
+
+//      {
+//     id: "video-5",
+//     title: "Social Reel",
+//     type: "Reel",
+//     description:
+//       "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
+//     videoUrl: "https://youtube.com/shorts/ePH2y6H1ii0?si=5TAPqvomac8P937J",
+    
+//     ratio: "portrait",
+//     startingLikes: 0,
+//   },
   
   
-     {
-    id: "video-6",
-    title: "Social Reel",
-    type: "Reel",
-    description:
-      "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
-    videoUrl: "https://youtube.com/shorts/3nZZ0eORDxY?si=P31FWtA1L-nzqMQm",
+//      {
+//     id: "video-6",
+//     title: "Social Reel",
+//     type: "Reel",
+//     description:
+//       "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
+//     videoUrl: "https://youtube.com/shorts/3nZZ0eORDxY?si=P31FWtA1L-nzqMQm",
     
-    ratio: "portrait",
-    startingLikes: 0,
-  },
+//     ratio: "portrait",
+//     startingLikes: 0,
+//   },
 
   
-     {
-    id: "video-7",
-    title: "Social Reel",
-    type: "Reel",
-    description:
-      "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
-    videoUrl: "https://youtube.com/shorts/9gqBPX8ecys?si=3YnCpFxEWrDTvP48",
+//      {
+//     id: "video-7",
+//     title: "Social Reel",
+//     type: "Reel",
+//     description:
+//       "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
+//     videoUrl: "https://youtube.com/shorts/9gqBPX8ecys?si=3YnCpFxEWrDTvP48",
     
-    ratio: "portrait",
-    startingLikes: 0,
-  },
+//     ratio: "portrait",
+//     startingLikes: 0,
+//   },
 
-    {
-    id: "video-8",
-    title: "Social Reel",
-    type: "Reel",
-    description:
-      "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
-    videoUrl: "https://youtube.com/shorts/l5hn6vs8LVM?si=L0FkDwF_DjA2XNJI",
+//     {
+//     id: "video-8",
+//     title: "Social Reel",
+//     type: "Reel",
+//     description:
+//       "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
+//     videoUrl: "https://youtube.com/shorts/l5hn6vs8LVM?si=L0FkDwF_DjA2XNJI",
     
-    ratio: "portrait",
-    startingLikes: 0,
-  },
+//     ratio: "portrait",
+//     startingLikes: 0,
+//   },
 
   
- {
-    id: "video-9",
-    title: "Social Reel",
-    type: "Reel",
-    description:
-      "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
-    videoUrl: "https://youtube.com/shorts/Rb32fPVexu0?si=5dtgDFcuqGwNaNUZ",
+//  {
+//     id: "video-9",
+//     title: "Social Reel",
+//     type: "Reel",
+//     description:
+//       "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
+//     videoUrl: "https://youtube.com/shorts/Rb32fPVexu0?si=5dtgDFcuqGwNaNUZ",
     
-    ratio: "portrait",
-    startingLikes: 0,
-  },
+//     ratio: "portrait",
+//     startingLikes: 0,
+//   },
 
-  {
-    id: "video-10",
-    title: "Social Reel",
-    type: "Reel",
-    description:
-      "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
-    videoUrl: "https://youtube.com/shorts/WmrHJVb0AlM?si=vIxoqAD5rmWIjcG0",
+//   {
+//     id: "video-10",
+//     title: "Social Reel",
+//     type: "Reel",
+//     description:
+//       "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
+//     videoUrl: "https://youtube.com/shorts/WmrHJVb0AlM?si=vIxoqAD5rmWIjcG0",
     
-    ratio: "portrait",
-    startingLikes: 0,
-  },
+//     ratio: "portrait",
+//     startingLikes: 0,
+//   },
 
 
-   {
-    id: "video-11",
-    title: "Social Reel",
-    type: "Reel",
-    description:
-      "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
-    videoUrl: "https://youtube.com/shorts/UwgKrPQKtr0?si=E64W8KdvflshPj4R",
+//    {
+//     id: "video-11",
+//     title: "Social Reel",
+//     type: "Reel",
+//     description:
+//       "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
+//     videoUrl: "https://youtube.com/shorts/UwgKrPQKtr0?si=E64W8KdvflshPj4R",
     
-    ratio: "portrait",
-    startingLikes: 0,
-  },
+//     ratio: "portrait",
+//     startingLikes: 0,
+//   },
 
 
-    {
-    id: "video-12",
-    title: "Social Reel",
-    type: "Reel",
-    description:
-      "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
-    videoUrl: "https://youtube.com/shorts/91_4MxDj5nE?si=CUjhXbxP-U9ehRr_",
+//     {
+//     id: "video-12",
+//     title: "Social Reel",
+//     type: "Reel",
+//     description:
+//       "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
+//     videoUrl: "https://youtube.com/shorts/91_4MxDj5nE?si=CUjhXbxP-U9ehRr_",
     
-    ratio: "portrait",
-    startingLikes: 0,
-  },
+//     ratio: "portrait",
+//     startingLikes: 0,
+//   },
   
   
-    {
-    id: "video-13",
-    title: "Social Reel",
-    type: "Reel",
-    description:
-      "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
-    videoUrl: "https://youtu.be/VSWlowuTAm8?si=YS5pqYyHgPaBXyTe",
+//     {
+//     id: "video-13",
+//     title: "Social Reel",
+//     type: "Reel",
+//     description:
+//       "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
+//     videoUrl: "https://youtu.be/VSWlowuTAm8?si=YS5pqYyHgPaBXyTe",
     
-    ratio: "landscape",
-    startingLikes: 0,
-  },
+//     ratio: "landscape",
+//     startingLikes: 0,
+//   },
 
 
-    {
-    id: "video-14",
-    title: "Social Reel",
-    type: "Reel",
-    description:
-      "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
-    videoUrl: "https://youtu.be/4mVfhx8FTXE?si=d28lHoi6xfbzmysa",
+//     {
+//     id: "video-14",
+//     title: "Social Reel",
+//     type: "Reel",
+//     description:
+//       "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
+//     videoUrl: "https://youtu.be/4mVfhx8FTXE?si=d28lHoi6xfbzmysa",
     
-    ratio: "landscape",
-    startingLikes: 0,
-  },
+//     ratio: "landscape",
+//     startingLikes: 0,
+//   },
 
+//      {
+//     id: "video-15",
+//     title: "Social Reel",
+//     type: "Reel",
+//     description:
+//       "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
+//     videoUrl: "https://youtube.com/shorts/3e9PMZwgLkA?si=8iczQ0H2-TzITgRE",
+    
+//     ratio: "potrait",
+//     startingLikes: 0,
+//   },
+
+
+//      {
+//     id: "video-16",
+//     title: "Social Reel",
+//     type: "Reel",
+//     description:
+//       "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
+//     videoUrl: "https://youtube.com/shorts/IlpgmmsbWaI",
+    
+//     ratio: "potrait",
+//     startingLikes: 0,
+//   },
+
+//     {
+//     id: "video-17",
+//     title: "Social Reel",
+//     type: "Reel",
+//     description:
+//       "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
+//     videoUrl: "https://youtube.com/shorts/KdEme4L8lrE?feature=share",
+    
+//     ratio: "potrait",
+//     startingLikes: 0,
+//   },
+
+  
+//     {
+//     id: "video-18",
+//     title: "Social Reel",
+//     type: "Reel",
+//     description:
+//       "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
+//     videoUrl: "https://youtube.com/shorts/KdEme4L8lrE?feature=share",
+    
+//     ratio: "potrait",
+//     startingLikes: 0,
+//   },
+  
+
+// ];
+
+
+const baseData = {
+  title: "Social Reel",
+  type: "Reel",
+  description:
+    "A short-form reel treatment designed for quick hooks, smooth motion, and mobile-first viewing.",
+  ratio: "portrait",
+  startingLikes: 0,
+};
+
+// Your existing videos (keep as is)
+const existingVideos = [
+  // paste your 1–18 here (same as your file)
 ];
+
+// Optional: add URLs later here
+const extraVideoUrls = {
+  1: "https://youtube.com/shorts/lsEp0gHTjbE?feature=share",
+  2: "https://youtu.be/13k1p0oCR1g?si=nu5ZgTj3qxuuZYu2",
+  3: "https://youtube.com/shorts/VoGkbs9e_bA?si=12Lk8Hb_45yvWATD",
+  4: "https://youtube.com/shorts/5RJX7uVQqMU",
+  5: "https://youtube.com/shorts/ePH2y6H1ii0?si=5TAPqvomac8P937J",
+  6: "https://youtube.com/shorts/3nZZ0eORDxY?si=P31FWtA1L-nzqMQm",
+  7: "https://youtube.com/shorts/9gqBPX8ecys?si=3YnCpFxEWrDTvP48",
+  8: "https://youtube.com/shorts/l5hn6vs8LVM?si=L0FkDwF_DjA2XNJI",
+  9: "https://youtube.com/shorts/Rb32fPVexu0?si=5dtgDFcuqGwNaNUZ",
+  10: "https://youtube.com/shorts/WmrHJVb0AlM?si=vIxoqAD5rmWIjcG0",
+  11: "https://youtube.com/shorts/UwgKrPQKtr0?si=E64W8KdvflshPj4R",
+  12: "https://youtube.com/shorts/91_4MxDj5nE?si=CUjhXbxP-U9ehRr_",
+  13: "https://youtu.be/VSWlowuTAm8?si=YS5pqYyHgPaBXyTe",
+  14: "https://youtu.be/4mVfhx8FTXE?si=d28lHoi6xfbzmysa",
+  15: "https://youtube.com/shorts/3e9PMZwgLkA?si=8iczQ0H2-TzITgRE",
+  16: "https://youtube.com/shorts/IlpgmmsbWaI",
+  17: "https://youtube.com/shorts/KdEme4L8lrE?feature=share",
+  18: "https://youtube.com/shorts/eNcTfX1_luI?feature=share",
+  19: "https://youtube.com/shorts/LplF7fjdx2k?feature=share",
+  20: "https://youtube.com/shorts/hIMTFizZ51Y?feature=share",
+  21: "https://youtube.com/shorts/L0MaOkwL1GA?feature=share",
+  // add when ready
+
+};
+
+// Auto-generate 19–100
+const generatedVideos = Array.from({ length: 100 }, (_, i) => {
+  const idNumber = i + 1;
+
+  return {
+    id: `video-${idNumber}`,
+    ...baseData,
+    videoUrl: extraVideoUrls[idNumber] || "",
+  };
+});
+
+// Final export
+export const videos = [...existingVideos, ...generatedVideos];
 
 
