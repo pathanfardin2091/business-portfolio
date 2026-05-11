@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const LIKES_KEY = "fardesign-video-likes";
 const THEME_KEY = "fardesign-video-theme";
@@ -99,12 +99,31 @@ function getVideoThumbnail(video) {
   return youtubeId ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg` : "";
 }
 
+function getVideoNumber(video) {
+  const idMatch = video.id?.match(/\d+/);
+
+  return idMatch ? Number(idMatch[0]) : 0;
+}
+
 export default function VideoShowcase({ videos }) {
   const heroRef = useRef(null);
   const [isDark, setIsDark] = useState(getSavedTheme);
   const [userLikes, setUserLikes] = useState(getSavedLikes);
   const [activeIndex, setActiveIndex] = useState(null);
-  const activeVideo = activeIndex === null ? null : videos[activeIndex];
+  const [sortOrder, setSortOrder] = useState("latest");
+  const sortedVideos = useMemo(() => {
+    return videos
+      .filter((video) => getVideoUrl(video))
+      .sort((firstVideo, secondVideo) => {
+        const firstNumber = getVideoNumber(firstVideo);
+        const secondNumber = getVideoNumber(secondVideo);
+
+        return sortOrder === "latest"
+          ? secondNumber - firstNumber
+          : firstNumber - secondNumber;
+      });
+  }, [sortOrder, videos]);
+  const activeVideo = activeIndex === null ? null : sortedVideos[activeIndex];
 
   useEffect(() => {
     window.localStorage.setItem(LIKES_KEY, JSON.stringify(userLikes));
@@ -129,7 +148,7 @@ export default function VideoShowcase({ videos }) {
 
       if (event.key === "ArrowRight") {
         setActiveIndex((currentIndex) =>
-          currentIndex === null ? 0 : (currentIndex + 1) % videos.length
+          currentIndex === null ? 0 : (currentIndex + 1) % sortedVideos.length
         );
       }
 
@@ -137,7 +156,7 @@ export default function VideoShowcase({ videos }) {
         setActiveIndex((currentIndex) =>
           currentIndex === null
             ? 0
-            : (currentIndex - 1 + videos.length) % videos.length
+            : (currentIndex - 1 + sortedVideos.length) % sortedVideos.length
         );
       }
     };
@@ -148,7 +167,7 @@ export default function VideoShowcase({ videos }) {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [activeIndex, videos.length]);
+  }, [activeIndex, sortedVideos.length]);
 
   const getLikesForVideo = (video) =>
     (video.startingLikes || 0) + (userLikes[video.id] ? 1 : 0);
@@ -173,7 +192,7 @@ export default function VideoShowcase({ videos }) {
         return 0;
       }
 
-      return (currentIndex + direction + videos.length) % videos.length;
+      return (currentIndex + direction + sortedVideos.length) % sortedVideos.length;
     });
   };
 
@@ -282,13 +301,50 @@ export default function VideoShowcase({ videos }) {
             </p>
           </div>
 
-          <p className={isDark ? "text-sm text-cyan-300" : "text-sm text-gray-500"}>
-            {videos.length} videos
-          </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <div
+              className={`flex rounded-full border p-1 ${
+                isDark
+                  ? "border-cyan-300/30 bg-white/[0.04]"
+                  : "border-gray-200 bg-gray-50"
+              }`}
+              aria-label="Sort videos"
+              role="group"
+            >
+              {["latest", "oldest"].map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => {
+                    setSortOrder(option);
+                    setActiveIndex(null);
+                  }}
+                  className={`rounded-full px-4 py-2 text-sm font-medium capitalize transition ${
+                    sortOrder === option
+                      ? isDark
+                        ? "bg-cyan-300 text-black"
+                        : "bg-black text-white"
+                      : isDark
+                        ? "text-cyan-100 hover:bg-white/10"
+                        : "text-gray-600 hover:bg-white"
+                  }`}
+                  aria-pressed={sortOrder === option}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+
+            <p
+              className={isDark ? "text-sm text-cyan-300" : "text-sm text-gray-500"}
+            >
+              {sortedVideos.length} videos
+            </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {videos.map((video, index) => (
+          {sortedVideos.map((video, index) => (
             <VideoCard
               key={video.id}
               video={video}
