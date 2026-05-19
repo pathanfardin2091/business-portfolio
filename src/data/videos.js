@@ -314,7 +314,7 @@ const extraVideoUrls = {
   38: "https://youtube.com/shorts/bYFUhxOJyqA?feature=share",
   39: "https://youtube.com/shorts/u83n-iaQ9_M?feature=share",
   40: "https://youtube.com/shorts/U0NZ5nMajQY?feature=share",
-  41: "https://youtube.com/shorts/rLruC7SfcAY?feature=share",
+  
 
 
   // This all commented out are also a ok video just adding above series vise
