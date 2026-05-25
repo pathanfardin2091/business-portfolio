@@ -61,17 +61,21 @@ function normalizeMetrics(metrics = {}) {
 }
 
 function getOrCreateStorageId(storage, key) {
-  const existing = storage.getItem(key);
+  try {
+    const existing = storage.getItem(key);
 
-  if (existing) {
-    return existing;
+    if (existing) {
+      return existing;
+    }
+
+    const id =
+      typeof crypto !== "undefined" && crypto.randomUUID
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+    storage.setItem(key, id);
+    return id;
+  } catch {
+    return `${key}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
   }
-
-  const id =
-    typeof crypto !== "undefined" && crypto.randomUUID
-      ? crypto.randomUUID()
-      : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-
-  storage.setItem(key, id);
-  return id;
 }

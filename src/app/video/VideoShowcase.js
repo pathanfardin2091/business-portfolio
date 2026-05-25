@@ -116,8 +116,9 @@ export default function VideoShowcase({ videos }) {
   const viewerIdentity = useRef(null);
   const engagementLoadId = useRef(0);
   const likeActionId = useRef(0);
-  const [isDark, setIsDark] = useState(getSavedTheme);
-  const [userLikes, setUserLikes] = useState(getSavedLikes);
+  const [isDark, setIsDark] = useState(false);
+  const [userLikes, setUserLikes] = useState({});
+  const [savedPreferencesLoaded, setSavedPreferencesLoaded] = useState(false);
   const [engagement, setEngagement] = useState(() =>
     getInitialEngagement(videos)
   );
@@ -137,6 +138,12 @@ export default function VideoShowcase({ videos }) {
       });
   }, [sortOrder, videos]);
   const activeVideo = activeIndex === null ? null : sortedVideos[activeIndex];
+
+  useEffect(() => {
+    setIsDark(getSavedTheme());
+    setUserLikes(getSavedLikes());
+    setSavedPreferencesLoaded(true);
+  }, []);
 
   useEffect(() => {
     viewerIdentity.current = createViewerIdentity();
@@ -170,12 +177,20 @@ export default function VideoShowcase({ videos }) {
   }, [sortedVideos]);
 
   useEffect(() => {
+    if (!savedPreferencesLoaded) {
+      return;
+    }
+
     window.localStorage.setItem(LIKES_KEY, JSON.stringify(userLikes));
-  }, [userLikes]);
+  }, [savedPreferencesLoaded, userLikes]);
 
   useEffect(() => {
+    if (!savedPreferencesLoaded) {
+      return;
+    }
+
     window.localStorage.setItem(THEME_KEY, isDark ? "dark" : "light");
-  }, [isDark]);
+  }, [isDark, savedPreferencesLoaded]);
 
   useEffect(() => {
     if (activeIndex === null) {
@@ -793,9 +808,14 @@ function TrackedEmbed({ video, onMeaningfulView }) {
     onMeaningfulView(video.id, {
       watchSeconds,
       completionRate,
-    }).finally(() => {
+    }).then((counted) => {
       if (!isCancelled) {
-        setViewProcessed(true);
+        setViewProcessed(Boolean(counted));
+        viewRequestStarted.current = Boolean(counted);
+      }
+    }).catch(() => {
+      if (!isCancelled) {
+        viewRequestStarted.current = false;
       }
     });
 
@@ -815,15 +835,6 @@ function TrackedEmbed({ video, onMeaningfulView }) {
         allowFullScreen
       />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/75 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-4 bottom-4">
-        <div className="h-1.5 overflow-hidden rounded-full bg-white/20">
-          <motion.div
-            className="h-full rounded-full bg-white"
-            animate={{ width: `${completionRate * 100}%` }}
-            transition={{ duration: 0.25 }}
-          />
-        </div>
-      </div>
     </div>
   );
 }
