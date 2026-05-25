@@ -6,14 +6,10 @@ import {
   createViewerIdentity,
   formatCompactNumber,
   getInitialEngagement,
-  loadStoredEngagement,
-  mergeEngagement,
-  registerMeaningfulView,
-  saveStoredEngagement,
   shouldCountView,
 } from "./reelEngagement";
 
-const LIKES_KEY = "fardesign-video-likes-v3";
+const LIKES_KEY = "fardesign-video-likes-v4";
 const THEME_KEY = "fardesign-video-theme";
 const skills = ["Motion Graphics", "Video Editing", "Branding"];
 
@@ -141,23 +137,32 @@ export default function VideoShowcase({ videos }) {
 
   useEffect(() => {
     viewerIdentity.current = createViewerIdentity();
+    const videoIds = sortedVideos.map((video) => video.id).join(",");
 
-    const timeoutId = window.setTimeout(() => {
-      setEngagement((current) =>
-        mergeEngagement(current, loadStoredEngagement())
-      );
-    }, 0);
+    fetch(
+      `/api/reels/engagement?ids=${encodeURIComponent(videoIds)}&viewerId=${encodeURIComponent(
+        viewerIdentity.current.viewerId
+      )}`,
+      { cache: "no-store" }
+    )
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (!data) {
+          return;
+        }
 
-    return () => window.clearTimeout(timeoutId);
-  }, []);
+        setEngagement((current) => ({
+          ...current,
+          ...data.engagement,
+        }));
+        setUserLikes(data.likedVideos || {});
+      })
+      .catch(() => {});
+  }, [sortedVideos]);
 
   useEffect(() => {
     window.localStorage.setItem(LIKES_KEY, JSON.stringify(userLikes));
   }, [userLikes]);
-
-  useEffect(() => {
-    saveStoredEngagement(engagement);
-  }, [engagement]);
 
   useEffect(() => {
     window.localStorage.setItem(THEME_KEY, isDark ? "dark" : "light");
@@ -202,8 +207,13 @@ export default function VideoShowcase({ videos }) {
   const getMetricsForVideo = (video) => engagement[video.id] || {};
   const getLikesForVideo = (video) => getMetricsForVideo(video).likes || 0;
 
-  const toggleLike = (videoId) => {
+  const toggleLike = async (videoId) => {
+    if (!viewerIdentity.current) {
+      return;
+    }
+
     const hasAlreadyLiked = Boolean(userLikes[videoId]);
+    const action = hasAlreadyLiked ? "unlike" : "like";
 
     setUserLikes((currentLikes) => {
       const nextLikes = { ...currentLikes };
@@ -231,31 +241,105 @@ export default function VideoShowcase({ videos }) {
         },
       };
     });
+
+    try {
+      const response = await fetch("/api/reels/engagement", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action,
+          videoId,
+          ...viewerIdentity.current,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Unable to update like.");
+      }
+
+      const data = await response.json();
+      setEngagement((currentEngagement) => ({
+        ...currentEngagement,
+        [videoId]: {
+          ...currentEngagement[videoId],
+          ...data.metrics,
+        },
+      }));
+      setUserLikes((currentLikes) => {
+        const nextLikes = { ...currentLikes };
+
+        if (data.liked) {
+          nextLikes[videoId] = true;
+        } else {
+          delete nextLikes[videoId];
+        }
+
+        return nextLikes;
+      });
+    } catch {
+      setUserLikes((currentLikes) => {
+        const nextLikes = { ...currentLikes };
+
+        if (hasAlreadyLiked) {
+          nextLikes[videoId] = true;
+        } else {
+          delete nextLikes[videoId];
+        }
+
+        return nextLikes;
+      });
+      setEngagement((currentEngagement) => {
+        const currentMetrics = currentEngagement[videoId] || {};
+
+        return {
+          ...currentEngagement,
+          [videoId]: {
+            ...currentMetrics,
+            likes: Math.max(
+              0,
+              (currentMetrics.likes || 0) + (hasAlreadyLiked ? 1 : -1)
+            ),
+          },
+        };
+      });
+    }
   };
 
-  const handleMeaningfulView = (videoId, watchState) => {
+  const handleMeaningfulView = async (videoId, watchState) => {
     if (!viewerIdentity.current) {
       return false;
     }
 
-    let counted = false;
+    try {
+      const response = await fetch("/api/reels/engagement", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "view",
+          videoId,
+          watchSeconds: watchState.watchSeconds,
+          completionRate: watchState.completionRate,
+          ...viewerIdentity.current,
+        }),
+      });
 
-    setEngagement((currentEngagement) => {
-      const result = registerMeaningfulView(
-        currentEngagement[videoId],
-        viewerIdentity.current,
-        watchState
-      );
+      if (!response.ok) {
+        return false;
+      }
 
-      counted = result.counted;
-
-      return {
+      const data = await response.json();
+      setEngagement((currentEngagement) => ({
         ...currentEngagement,
-        [videoId]: result.metrics,
-      };
-    });
+        [videoId]: {
+          ...currentEngagement[videoId],
+          ...data.metrics,
+        },
+      }));
 
-    return counted;
+      return Boolean(data.counted);
+    } catch {
+      return false;
+    }
   };
 
   const goToVideo = (direction) => {
