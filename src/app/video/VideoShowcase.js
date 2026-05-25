@@ -2,8 +2,18 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  createViewerIdentity,
+  formatCompactNumber,
+  getInitialEngagement,
+  loadStoredEngagement,
+  mergeEngagement,
+  registerMeaningfulView,
+  saveStoredEngagement,
+  shouldCountView,
+} from "./reelEngagement";
 
-const LIKES_KEY = "fardesign-video-likes";
+const LIKES_KEY = "fardesign-video-likes-v3";
 const THEME_KEY = "fardesign-video-theme";
 const skills = ["Motion Graphics", "Video Editing", "Branding"];
 
@@ -107,8 +117,12 @@ function getVideoNumber(video) {
 
 export default function VideoShowcase({ videos }) {
   const heroRef = useRef(null);
+  const viewerIdentity = useRef(null);
   const [isDark, setIsDark] = useState(getSavedTheme);
   const [userLikes, setUserLikes] = useState(getSavedLikes);
+  const [engagement, setEngagement] = useState(() =>
+    getInitialEngagement(videos)
+  );
   const [activeIndex, setActiveIndex] = useState(null);
   const [sortOrder, setSortOrder] = useState("latest");
   const sortedVideos = useMemo(() => {
@@ -126,8 +140,24 @@ export default function VideoShowcase({ videos }) {
   const activeVideo = activeIndex === null ? null : sortedVideos[activeIndex];
 
   useEffect(() => {
+    viewerIdentity.current = createViewerIdentity();
+
+    const timeoutId = window.setTimeout(() => {
+      setEngagement((current) =>
+        mergeEngagement(current, loadStoredEngagement())
+      );
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
+  useEffect(() => {
     window.localStorage.setItem(LIKES_KEY, JSON.stringify(userLikes));
   }, [userLikes]);
+
+  useEffect(() => {
+    saveStoredEngagement(engagement);
+  }, [engagement]);
 
   useEffect(() => {
     window.localStorage.setItem(THEME_KEY, isDark ? "dark" : "light");
@@ -169,14 +199,16 @@ export default function VideoShowcase({ videos }) {
     };
   }, [activeIndex, sortedVideos.length]);
 
-  const getLikesForVideo = (video) =>
-    (video.startingLikes || 0) + (userLikes[video.id] ? 1 : 0);
+  const getMetricsForVideo = (video) => engagement[video.id] || {};
+  const getLikesForVideo = (video) => getMetricsForVideo(video).likes || 0;
 
   const toggleLike = (videoId) => {
+    const hasAlreadyLiked = Boolean(userLikes[videoId]);
+
     setUserLikes((currentLikes) => {
       const nextLikes = { ...currentLikes };
 
-      if (nextLikes[videoId]) {
+      if (hasAlreadyLiked) {
         delete nextLikes[videoId];
       } else {
         nextLikes[videoId] = true;
@@ -184,6 +216,46 @@ export default function VideoShowcase({ videos }) {
 
       return nextLikes;
     });
+
+    setEngagement((currentEngagement) => {
+      const currentMetrics = currentEngagement[videoId] || {};
+
+      return {
+        ...currentEngagement,
+        [videoId]: {
+          ...currentMetrics,
+          likes: Math.max(
+            0,
+            (currentMetrics.likes || 0) + (hasAlreadyLiked ? -1 : 1)
+          ),
+        },
+      };
+    });
+  };
+
+  const handleMeaningfulView = (videoId, watchState) => {
+    if (!viewerIdentity.current) {
+      return false;
+    }
+
+    let counted = false;
+
+    setEngagement((currentEngagement) => {
+      const result = registerMeaningfulView(
+        currentEngagement[videoId],
+        viewerIdentity.current,
+        watchState
+      );
+
+      counted = result.counted;
+
+      return {
+        ...currentEngagement,
+        [videoId]: result.metrics,
+      };
+    });
+
+    return counted;
   };
 
   const goToVideo = (direction) => {
@@ -351,6 +423,7 @@ export default function VideoShowcase({ videos }) {
               isDark={isDark}
               hasLiked={Boolean(userLikes[video.id])}
               likes={getLikesForVideo(video)}
+              metrics={getMetricsForVideo(video)}
               onOpen={() => setActiveIndex(index)}
               onToggleLike={() => toggleLike(video.id)}
             />
@@ -363,16 +436,26 @@ export default function VideoShowcase({ videos }) {
         isDark={isDark}
         hasLiked={activeVideo ? Boolean(userLikes[activeVideo.id]) : false}
         likes={activeVideo ? getLikesForVideo(activeVideo) : 0}
+        metrics={activeVideo ? getMetricsForVideo(activeVideo) : {}}
         onClose={() => setActiveIndex(null)}
         onPrevious={() => goToVideo(-1)}
         onNext={() => goToVideo(1)}
         onToggleLike={() => activeVideo && toggleLike(activeVideo.id)}
+        onMeaningfulView={handleMeaningfulView}
       />
     </main>
   );
 }
 
-function VideoCard({ video, isDark, hasLiked, likes, onOpen, onToggleLike }) {
+function VideoCard({
+  video,
+  isDark,
+  hasLiked,
+  likes,
+  metrics,
+  onOpen,
+  onToggleLike,
+}) {
   const thumbnail = getVideoThumbnail(video);
   const provider = getVideoProvider(video);
 
@@ -440,21 +523,13 @@ function VideoCard({ video, isDark, hasLiked, likes, onOpen, onToggleLike }) {
           </span>
         </button>
 
-        <button
-          type="button"
-          onClick={onToggleLike}
-          aria-label={hasLiked ? "Unlike video" : "Like video"}
-          className={`flex shrink-0 items-center gap-2 rounded-full border px-3 py-2 text-sm font-medium transition ${
-            hasLiked
-              ? "border-red-500 bg-red-500 text-white"
-              : isDark
-                ? "border-cyan-300/40 bg-cyan-300/10 text-cyan-100 hover:border-cyan-200 hover:bg-cyan-300/20"
-                : "border-gray-300 bg-white text-black hover:border-black"
-          }`}
-        >
-          <HeartIcon filled={hasLiked} />
-          <span>{likes}</span>
-        </button>
+        <EngagementRow
+          hasLiked={hasLiked}
+          isDark={isDark}
+          likes={likes}
+          views={metrics.views}
+          onToggleLike={onToggleLike}
+        />
       </div>
     </article>
   );
@@ -465,10 +540,12 @@ function VideoOverlay({
   isDark,
   hasLiked,
   likes,
+  metrics,
   onClose,
   onPrevious,
   onNext,
   onToggleLike,
+  onMeaningfulView,
 }) {
   return (
     <AnimatePresence>
@@ -520,12 +597,10 @@ function VideoOverlay({
                       : "aspect-[9/16]"
                   }
                 >
-                  <iframe
-                    className="h-full w-full"
-                    src={getEmbedUrl(video)}
-                    title={video.title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
+                  <TrackedEmbed
+                    key={video.id}
+                    video={video}
+                    onMeaningfulView={onMeaningfulView}
                   />
                 </div>
               </div>
@@ -545,26 +620,141 @@ function VideoOverlay({
                     {video.description}
                   </p>
                 ) : null}
+
               </div>
 
-              <button
-                type="button"
-                onClick={onToggleLike}
-                aria-label={hasLiked ? "Unlike video" : "Like video"}
-                className={`mt-8 flex w-fit shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition ${
-                  hasLiked
-                    ? "border-red-500 bg-red-500 text-white"
-                    : "border-white/30 bg-white/10 text-white hover:bg-white hover:text-black"
-                }`}
-              >
-                <HeartIcon filled={hasLiked} />
-                <span>{likes}</span>
-              </button>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <EngagementRow
+                  hasLiked={hasLiked}
+                  isDark
+                  likes={likes}
+                  views={metrics.views}
+                  onToggleLike={onToggleLike}
+                />
+              </div>
             </aside>
           </motion.div>
         </motion.div>
       ) : null}
     </AnimatePresence>
+  );
+}
+
+function TrackedEmbed({ video, onMeaningfulView }) {
+  const [watchSeconds, setWatchSeconds] = useState(0);
+  const [viewProcessed, setViewProcessed] = useState(false);
+  const duration = video.durationSeconds || (video.ratio === "landscape" ? 60 : 25);
+  const completionRate = Math.min(watchSeconds / duration, 1);
+  const src = `${getEmbedUrl(video)}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1`;
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setWatchSeconds((currentSeconds) => Math.min(currentSeconds + 1, duration));
+    }, 1000);
+
+    return () => window.clearInterval(intervalId);
+  }, [duration, video.id]);
+
+  useEffect(() => {
+    if (viewProcessed || !shouldCountView(watchSeconds, completionRate)) {
+      return;
+    }
+
+    onMeaningfulView(video.id, {
+      watchSeconds,
+      completionRate,
+      replayed: watchSeconds >= duration,
+    });
+    const timeoutId = window.setTimeout(() => {
+      setViewProcessed(true);
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [completionRate, duration, onMeaningfulView, video.id, viewProcessed, watchSeconds]);
+
+  return (
+    <div className="relative h-full w-full bg-black">
+      <iframe
+        className="h-full w-full"
+        src={src}
+        title={video.title}
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+      />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/75 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-4 bottom-4">
+        <div className="h-1.5 overflow-hidden rounded-full bg-white/20">
+          <motion.div
+            className="h-full rounded-full bg-white"
+            animate={{ width: `${completionRate * 100}%` }}
+            transition={{ duration: 0.25 }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EngagementRow({ hasLiked, isDark, likes, views, onToggleLike }) {
+  return (
+    <div className="flex shrink-0 items-center gap-2">
+      <ViewPill isDark={isDark} views={views} />
+      <EngagementButton
+        hasLiked={hasLiked}
+        isDark={isDark}
+        likes={likes}
+        onToggleLike={onToggleLike}
+      />
+    </div>
+  );
+}
+
+function ViewPill({ isDark, views }) {
+  return (
+    <div
+      className={`flex items-center gap-2 rounded-full border px-3 py-2 text-sm font-medium ${
+        isDark
+          ? "border-cyan-300/40 bg-cyan-300/10 text-cyan-100"
+          : "border-gray-300 bg-white text-black"
+      }`}
+      aria-label={`${views || 0} views`}
+    >
+      <EyeIcon />
+      <motion.span
+        key={views}
+        initial={{ y: -4, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+      >
+        {formatCompactNumber(views)}
+      </motion.span>
+    </div>
+  );
+}
+
+function EngagementButton({ hasLiked, isDark, likes, onToggleLike }) {
+  return (
+    <button
+      type="button"
+      onClick={onToggleLike}
+      aria-label={hasLiked ? "Unlike video" : "Like video"}
+      className={`flex shrink-0 items-center gap-2 rounded-full border px-3 py-2 text-sm font-medium transition active:scale-95 ${
+        hasLiked
+          ? "border-red-500 bg-red-500 text-white"
+          : isDark
+            ? "border-cyan-300/40 bg-cyan-300/10 text-cyan-100 hover:border-cyan-200 hover:bg-cyan-300/20"
+            : "border-gray-300 bg-white text-black hover:border-black"
+      }`}
+    >
+      <HeartIcon filled={hasLiked} />
+      <motion.span
+        key={likes}
+        initial={{ y: -4, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+      >
+        {formatCompactNumber(likes)}
+      </motion.span>
+    </button>
   );
 }
 
@@ -620,6 +810,24 @@ function HeartIcon({ filled }) {
       strokeLinejoin="round"
     >
       <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z" />
+    </svg>
+  );
+}
+
+function EyeIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className="h-4 w-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" />
+      <circle cx="12" cy="12" r="3" />
     </svg>
   );
 }
