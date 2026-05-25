@@ -7,6 +7,9 @@ import {
 
 export const dynamic = "force-dynamic";
 
+const MEANINGFUL_SECONDS = 7;
+const MEANINGFUL_PERCENT = 0.3;
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const videoIds = (searchParams.get("ids") || "")
@@ -41,9 +44,19 @@ export async function POST(request) {
   }
 
   if (action === "view") {
+    const watchSeconds = Number(body.watchSeconds || 0);
+    const completionRate = Number(body.completionRate || 0);
+
+    if (watchSeconds < MEANINGFUL_SECONDS && completionRate < MEANINGFUL_PERCENT) {
+      return NextResponse.json(
+        { counted: false, error: "Watch threshold not met." },
+        { status: 202 }
+      );
+    }
+
     const result = await recordView(videoId, identity, {
-      watchSeconds: Number(body.watchSeconds || 0),
-      completionRate: Number(body.completionRate || 0),
+      watchSeconds,
+      completionRate,
     });
 
     return NextResponse.json(result);

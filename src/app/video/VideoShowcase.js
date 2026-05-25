@@ -114,11 +114,14 @@ function getVideoNumber(video) {
 export default function VideoShowcase({ videos }) {
   const heroRef = useRef(null);
   const viewerIdentity = useRef(null);
+  const engagementLoadId = useRef(0);
+  const likeActionId = useRef(0);
   const [isDark, setIsDark] = useState(getSavedTheme);
   const [userLikes, setUserLikes] = useState(getSavedLikes);
   const [engagement, setEngagement] = useState(() =>
     getInitialEngagement(videos)
   );
+  const [pendingLikes, setPendingLikes] = useState({});
   const [activeIndex, setActiveIndex] = useState(null);
   const [sortOrder, setSortOrder] = useState("latest");
   const sortedVideos = useMemo(() => {
@@ -138,6 +141,10 @@ export default function VideoShowcase({ videos }) {
   useEffect(() => {
     viewerIdentity.current = createViewerIdentity();
     const videoIds = sortedVideos.map((video) => video.id).join(",");
+    const currentLoadId = engagementLoadId.current + 1;
+    const currentLikeActionId = likeActionId.current;
+
+    engagementLoadId.current = currentLoadId;
 
     fetch(
       `/api/reels/engagement?ids=${encodeURIComponent(videoIds)}&viewerId=${encodeURIComponent(
@@ -147,7 +154,7 @@ export default function VideoShowcase({ videos }) {
     )
       .then((response) => (response.ok ? response.json() : null))
       .then((data) => {
-        if (!data) {
+        if (!data || currentLoadId !== engagementLoadId.current) {
           return;
         }
 
@@ -155,7 +162,9 @@ export default function VideoShowcase({ videos }) {
           ...current,
           ...data.engagement,
         }));
-        setUserLikes(data.likedVideos || {});
+        if (currentLikeActionId === likeActionId.current) {
+          setUserLikes(data.likedVideos || {});
+        }
       })
       .catch(() => {});
   }, [sortedVideos]);
@@ -208,12 +217,19 @@ export default function VideoShowcase({ videos }) {
   const getLikesForVideo = (video) => getMetricsForVideo(video).likes || 0;
 
   const toggleLike = async (videoId) => {
-    if (!viewerIdentity.current) {
+    if (!viewerIdentity.current || pendingLikes[videoId]) {
       return;
     }
 
     const hasAlreadyLiked = Boolean(userLikes[videoId]);
     const action = hasAlreadyLiked ? "unlike" : "like";
+    const currentActionId = likeActionId.current + 1;
+
+    likeActionId.current = currentActionId;
+    setPendingLikes((currentPendingLikes) => ({
+      ...currentPendingLikes,
+      [videoId]: true,
+    }));
 
     setUserLikes((currentLikes) => {
       const nextLikes = { ...currentLikes };
@@ -258,6 +274,11 @@ export default function VideoShowcase({ videos }) {
       }
 
       const data = await response.json();
+
+      if (currentActionId !== likeActionId.current) {
+        return;
+      }
+
       setEngagement((currentEngagement) => ({
         ...currentEngagement,
         [videoId]: {
@@ -277,6 +298,10 @@ export default function VideoShowcase({ videos }) {
         return nextLikes;
       });
     } catch {
+      if (currentActionId !== likeActionId.current) {
+        return;
+      }
+
       setUserLikes((currentLikes) => {
         const nextLikes = { ...currentLikes };
 
@@ -301,6 +326,13 @@ export default function VideoShowcase({ videos }) {
             ),
           },
         };
+      });
+    } finally {
+      setPendingLikes((currentPendingLikes) => {
+        const nextPendingLikes = { ...currentPendingLikes };
+        delete nextPendingLikes[videoId];
+
+        return nextPendingLikes;
       });
     }
   };
@@ -508,6 +540,7 @@ export default function VideoShowcase({ videos }) {
               hasLiked={Boolean(userLikes[video.id])}
               likes={getLikesForVideo(video)}
               metrics={getMetricsForVideo(video)}
+              isLikePending={Boolean(pendingLikes[video.id])}
               onOpen={() => setActiveIndex(index)}
               onToggleLike={() => toggleLike(video.id)}
             />
@@ -521,6 +554,7 @@ export default function VideoShowcase({ videos }) {
         hasLiked={activeVideo ? Boolean(userLikes[activeVideo.id]) : false}
         likes={activeVideo ? getLikesForVideo(activeVideo) : 0}
         metrics={activeVideo ? getMetricsForVideo(activeVideo) : {}}
+        isLikePending={activeVideo ? Boolean(pendingLikes[activeVideo.id]) : false}
         onClose={() => setActiveIndex(null)}
         onPrevious={() => goToVideo(-1)}
         onNext={() => goToVideo(1)}
@@ -537,6 +571,7 @@ function VideoCard({
   hasLiked,
   likes,
   metrics,
+  isLikePending,
   onOpen,
   onToggleLike,
 }) {
@@ -612,6 +647,7 @@ function VideoCard({
           isDark={isDark}
           likes={likes}
           views={metrics.views}
+          disabled={isLikePending}
           onToggleLike={onToggleLike}
         />
       </div>
@@ -625,6 +661,7 @@ function VideoOverlay({
   hasLiked,
   likes,
   metrics,
+  isLikePending,
   onClose,
   onPrevious,
   onNext,
@@ -713,6 +750,7 @@ function VideoOverlay({
                   isDark
                   likes={likes}
                   views={metrics.views}
+                  disabled={isLikePending}
                   onToggleLike={onToggleLike}
                 />
               </div>
@@ -727,6 +765,7 @@ function VideoOverlay({
 function TrackedEmbed({ video, onMeaningfulView }) {
   const [watchSeconds, setWatchSeconds] = useState(0);
   const [viewProcessed, setViewProcessed] = useState(false);
+  const viewRequestStarted = useRef(false);
   const duration = video.durationSeconds || (video.ratio === "landscape" ? 60 : 25);
   const completionRate = Math.min(watchSeconds / duration, 1);
   const src = `${getEmbedUrl(video)}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1`;
@@ -740,20 +779,29 @@ function TrackedEmbed({ video, onMeaningfulView }) {
   }, [duration, video.id]);
 
   useEffect(() => {
-    if (viewProcessed || !shouldCountView(watchSeconds, completionRate)) {
+    if (
+      viewProcessed ||
+      viewRequestStarted.current ||
+      !shouldCountView(watchSeconds, completionRate)
+    ) {
       return;
     }
+
+    let isCancelled = false;
+    viewRequestStarted.current = true;
 
     onMeaningfulView(video.id, {
       watchSeconds,
       completionRate,
-      replayed: watchSeconds >= duration,
+    }).finally(() => {
+      if (!isCancelled) {
+        setViewProcessed(true);
+      }
     });
-    const timeoutId = window.setTimeout(() => {
-      setViewProcessed(true);
-    }, 0);
 
-    return () => window.clearTimeout(timeoutId);
+    return () => {
+      isCancelled = true;
+    };
   }, [completionRate, duration, onMeaningfulView, video.id, viewProcessed, watchSeconds]);
 
   return (
@@ -780,7 +828,7 @@ function TrackedEmbed({ video, onMeaningfulView }) {
   );
 }
 
-function EngagementRow({ hasLiked, isDark, likes, views, onToggleLike }) {
+function EngagementRow({ disabled, hasLiked, isDark, likes, views, onToggleLike }) {
   return (
     <div className="flex shrink-0 items-center gap-2">
       <ViewPill isDark={isDark} views={views} />
@@ -788,6 +836,7 @@ function EngagementRow({ hasLiked, isDark, likes, views, onToggleLike }) {
         hasLiked={hasLiked}
         isDark={isDark}
         likes={likes}
+        disabled={disabled}
         onToggleLike={onToggleLike}
       />
     </div>
@@ -816,13 +865,14 @@ function ViewPill({ isDark, views }) {
   );
 }
 
-function EngagementButton({ hasLiked, isDark, likes, onToggleLike }) {
+function EngagementButton({ disabled, hasLiked, isDark, likes, onToggleLike }) {
   return (
     <button
       type="button"
+      disabled={disabled}
       onClick={onToggleLike}
       aria-label={hasLiked ? "Unlike video" : "Like video"}
-      className={`flex shrink-0 items-center gap-2 rounded-full border px-3 py-2 text-sm font-medium transition active:scale-95 ${
+      className={`flex shrink-0 items-center gap-2 rounded-full border px-3 py-2 text-sm font-medium transition active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 ${
         hasLiked
           ? "border-red-500 bg-red-500 text-white"
           : isDark

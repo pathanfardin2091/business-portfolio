@@ -26,4 +26,10 @@ body {
 button,
 a {
   -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
 }
