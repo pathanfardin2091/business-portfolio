@@ -353,8 +353,8 @@ function SharpAsset({ slide, priority, label, isActive }) {
       return;
     }
 
-    video.muted = false;
-    video.defaultMuted = false;
+    video.muted = true;
+    video.defaultMuted = true;
     video.volume = 1;
 
     if (!isActive || isPaused) {
