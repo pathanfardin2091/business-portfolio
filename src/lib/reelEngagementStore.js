@@ -18,28 +18,36 @@ const defaultMetrics = {
   dailyViews: [],
 };
 
-export async function getEngagement(videoIds, viewerId = "") {
-  const store = await readStore();
+export async function getEngagement(
+  videoIds,
+  viewerId = "",
+  initialMetricsByVideoId = {}
+) {
+  return updateStore((store) =>
+    videoIds.reduce(
+      (result, videoId) => {
+        const metrics = ensureVideoMetrics(
+          store,
+          videoId,
+          initialMetricsByVideoId[videoId]
+        );
 
-  return videoIds.reduce(
-    (result, videoId) => {
-      const metrics = normalizeMetrics(store[videoId]);
+        result.engagement[videoId] = publicMetrics(metrics);
 
-      result.engagement[videoId] = publicMetrics(metrics);
+        if (viewerId && metrics.likedViewers[viewerId]) {
+          result.likedVideos[videoId] = true;
+        }
 
-      if (viewerId && metrics.likedViewers[viewerId]) {
-        result.likedVideos[videoId] = true;
-      }
-
-      return result;
-    },
-    { engagement: {}, likedVideos: {} }
+        return result;
+      },
+      { engagement: {}, likedVideos: {} }
+    )
   );
 }
 
-export async function recordView(videoId, identity, watchState) {
+export async function recordView(videoId, identity, watchState, initialMetrics) {
   return updateStore((store) => {
-    const metrics = normalizeMetrics(store[videoId]);
+    const metrics = ensureVideoMetrics(store, videoId, initialMetrics);
     const now = Date.now();
     const recentViews = metrics.dailyViews.filter(
       (view) => now - view.timestamp < VIEW_WINDOW_MS
@@ -81,9 +89,9 @@ export async function recordView(videoId, identity, watchState) {
   });
 }
 
-export async function recordLike(videoId, identity, shouldLike) {
+export async function recordLike(videoId, identity, shouldLike, initialMetrics) {
   return updateStore((store) => {
-    const metrics = normalizeMetrics(store[videoId]);
+    const metrics = ensureVideoMetrics(store, videoId, initialMetrics);
     const hasLiked = Boolean(metrics.likedViewers[identity.viewerId]);
 
     if (shouldLike && !hasLiked) {
@@ -206,6 +214,20 @@ function normalizeMetrics(metrics = {}) {
     likedViewers: metrics.likedViewers || {},
     dailyViews: metrics.dailyViews || [],
   };
+}
+
+function ensureVideoMetrics(store, videoId, initialMetrics = {}) {
+  if (!store[videoId]) {
+    store[videoId] = normalizeMetrics({
+      views: initialMetrics.views || 0,
+      uniqueViews: initialMetrics.uniqueViews || initialMetrics.views || 0,
+      likes: initialMetrics.likes || 0,
+    });
+  } else {
+    store[videoId] = normalizeMetrics(store[videoId]);
+  }
+
+  return store[videoId];
 }
 
 function publicMetrics(metrics) {

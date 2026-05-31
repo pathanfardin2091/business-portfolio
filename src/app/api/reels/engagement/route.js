@@ -4,11 +4,24 @@ import {
   recordLike,
   recordView,
 } from "@/lib/reelEngagementStore";
+import { videos } from "@/data/videos";
 
 export const dynamic = "force-dynamic";
 
 const MEANINGFUL_SECONDS = 7;
 const MEANINGFUL_PERCENT = 0.3;
+const noStoreHeaders = {
+  "Cache-Control": "no-store, max-age=0",
+};
+const initialEngagementByVideoId = videos.reduce((result, video) => {
+  result[video.id] = {
+    views: video.startingViews || 0,
+    uniqueViews: video.startingViews || 0,
+    likes: video.startingLikes || 0,
+  };
+
+  return result;
+}, {});
 
 export async function GET(request) {
   try {
@@ -20,13 +33,17 @@ export async function GET(request) {
     const viewerId = searchParams.get("viewerId") || "";
 
     if (!videoIds.length) {
-      return NextResponse.json({ engagement: {}, likedVideos: {} });
+      return jsonNoStore({ engagement: {}, likedVideos: {} });
     }
 
-    const engagement = await getEngagement(videoIds, viewerId);
-    return NextResponse.json(engagement);
+    const engagement = await getEngagement(
+      videoIds,
+      viewerId,
+      initialEngagementByVideoId
+    );
+    return jsonNoStore(engagement);
   } catch {
-    return NextResponse.json({ engagement: {}, likedVideos: {} });
+    return jsonNoStore({ engagement: {}, likedVideos: {} });
   }
 }
 
@@ -42,7 +59,7 @@ export async function POST(request) {
     };
 
     if (!videoId || !identity.viewerId) {
-      return NextResponse.json(
+      return jsonNoStore(
         { error: "Missing video or viewer identity." },
         { status: 400 }
       );
@@ -56,30 +73,50 @@ export async function POST(request) {
         watchSeconds < MEANINGFUL_SECONDS &&
         completionRate < MEANINGFUL_PERCENT
       ) {
-        return NextResponse.json(
+        return jsonNoStore(
           { counted: false, error: "Watch threshold not met." },
           { status: 202 }
         );
       }
 
-      const result = await recordView(videoId, identity, {
-        watchSeconds,
-        completionRate,
-      });
+      const result = await recordView(
+        videoId,
+        identity,
+        {
+          watchSeconds,
+          completionRate,
+        },
+        initialEngagementByVideoId[videoId]
+      );
 
-      return NextResponse.json(result);
+      return jsonNoStore(result);
     }
 
     if (action === "like" || action === "unlike") {
-      const result = await recordLike(videoId, identity, action === "like");
-      return NextResponse.json(result);
+      const result = await recordLike(
+        videoId,
+        identity,
+        action === "like",
+        initialEngagementByVideoId[videoId]
+      );
+      return jsonNoStore(result);
     }
 
-    return NextResponse.json({ error: "Unsupported action." }, { status: 400 });
+    return jsonNoStore({ error: "Unsupported action." }, { status: 400 });
   } catch {
-    return NextResponse.json(
+    return jsonNoStore(
       { error: "Unable to save reel engagement right now." },
       { status: 503 }
     );
   }
+}
+
+function jsonNoStore(body, init = {}) {
+  return NextResponse.json(body, {
+    ...init,
+    headers: {
+      ...noStoreHeaders,
+      ...init.headers,
+    },
+  });
 }
