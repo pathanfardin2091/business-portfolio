@@ -341,6 +341,9 @@ function SharpAsset({ slide, priority, label, isActive }) {
   const videoRef = useRef(null);
   const [isPaused, setIsPaused] = useState(false);
   const [needsUserPlay, setNeedsUserPlay] = useState(false);
+  const [volumePercent, setVolumePercent] = useState(0);
+  const [hasAdjustedVolume, setHasAdjustedVolume] = useState(false);
+  const [showVolumeHint, setShowVolumeHint] = useState(false);
   const embedUrl = getHeroEmbedUrl(slide.src, {
     autoplay: isActive && !isPaused,
   });
@@ -348,14 +351,15 @@ function SharpAsset({ slide, priority, label, isActive }) {
 
   useEffect(() => {
     const video = videoRef.current;
+    const volume = volumePercent / 100;
 
     if (!video || !isHostedVideo) {
       return;
     }
 
-    video.muted = true;
+    video.volume = volume;
+    video.muted = volume === 0;
     video.defaultMuted = true;
-    video.volume = 1;
 
     if (!isActive || isPaused) {
       video.pause();
@@ -369,7 +373,44 @@ function SharpAsset({ slide, priority, label, isActive }) {
         .then(() => setNeedsUserPlay(false))
         .catch(() => setNeedsUserPlay(true));
     }
-  }, [isActive, isHostedVideo, isPaused]);
+  }, [isActive, isHostedVideo, isPaused, volumePercent]);
+
+  useEffect(() => {
+    const savedVolume = window.localStorage.getItem("heroVideoVolume");
+
+    if (savedVolume === null) {
+      return;
+    }
+
+    const parsedVolume = Number(savedVolume);
+    const nextVolume = Math.min(100, Math.max(0, parsedVolume));
+
+    if (Number.isFinite(parsedVolume)) {
+      const restoreVolume = window.setTimeout(() => {
+        setVolumePercent(nextVolume);
+        setHasAdjustedVolume(true);
+      }, 0);
+
+      return () => window.clearTimeout(restoreVolume);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isHostedVideo || hasAdjustedVolume || volumePercent > 0) {
+      return;
+    }
+
+    let hintTimeout;
+    const hintInterval = window.setInterval(() => {
+      setShowVolumeHint(true);
+      hintTimeout = window.setTimeout(() => setShowVolumeHint(false), 900);
+    }, 8000);
+
+    return () => {
+      window.clearInterval(hintInterval);
+      window.clearTimeout(hintTimeout);
+    };
+  }, [hasAdjustedVolume, isHostedVideo, volumePercent]);
 
   if (slide.type === "image") {
     return (
@@ -432,9 +473,33 @@ function SharpAsset({ slide, priority, label, isActive }) {
         loop
         playsInline
         controls={false}
-        muted={false}
+        muted={volumePercent === 0}
         preload={priority ? "auto" : "metadata"}
       />
+
+      <label
+        className={`absolute bottom-5 left-5 z-10 flex h-10 w-36 items-center gap-2 rounded-full bg-white/90 px-3 text-xs font-medium text-black shadow-lg transition duration-300 hover:bg-white sm:w-44 ${
+          showVolumeHint ? "scale-105 shadow-white/50 ring-2 ring-white/60" : ""
+        }`}
+      >
+        <span className="shrink-0">Vol</span>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value={volumePercent}
+          onChange={(event) => {
+            const nextVolume = Number(event.target.value);
+            setHasAdjustedVolume(true);
+            setShowVolumeHint(false);
+            setVolumePercent(nextVolume);
+            window.localStorage.setItem("heroVideoVolume", String(nextVolume));
+          }}
+          aria-label="Hero video volume"
+          className="h-1 min-w-0 flex-1 cursor-pointer accent-black"
+        />
+        <span className="w-7 text-right tabular-nums">{volumePercent}%</span>
+      </label>
 
       <button
         type="button"

@@ -10,6 +10,9 @@ export const metadata = {
   },
   description:
     "Helping businesses grow through branding, premium packaging design, and clean digital experiences.",
+  other: {
+    "p:domain_verify": "4f1520ca6a6cf1ce6c680adb6c4d5abc",
+  },
 };
 
 export default function RootLayout({ children }) {
