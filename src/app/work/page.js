@@ -24,6 +24,11 @@ export default function WorkPage() {
           {projects.map((project) => (
             <article
               key={project.slug}
+              data-analytics-view="portfolio_project_view"
+              data-analytics-category="portfolio"
+              data-analytics-id={project.slug}
+              data-analytics-name={project.title}
+              data-analytics-label={project.title}
               className="group cursor-pointer transition-all duration-300 hover:-translate-y-1"
             >
               <div className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl bg-gray-100 transition-shadow group-hover:shadow-lg">

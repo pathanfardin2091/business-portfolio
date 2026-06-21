@@ -1,5 +1,8 @@
 import Link from "next/link";
-import GoogleAnalytics from "./components/GoogleAnalytics";
+import AnalyticsEvents from "./components/AnalyticsEvents";
+import GoogleTagManager, {
+  GoogleTagManagerNoScript,
+} from "./components/GoogleTagManager";
 import Navbar from "./components/Navbar";
 import "./globals.css";
 
@@ -15,11 +18,17 @@ export const metadata = {
   },
 };
 
+const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <GoogleTagManager gtmId={GTM_ID} />
+      </head>
       <body className="antialiased">
-        <GoogleAnalytics GA_MEASUREMENT_ID="G-77QF7MFC72" />
+        <GoogleTagManagerNoScript gtmId={GTM_ID} />
+        <AnalyticsEvents />
         <Navbar />
         {children}
 

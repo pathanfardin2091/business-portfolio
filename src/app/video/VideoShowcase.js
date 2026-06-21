@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { pushAnalyticsEvent } from "../components/analytics";
 import {
   createViewerIdentity,
   formatCompactNumber,
@@ -595,6 +596,11 @@ function VideoCard({
 
   return (
     <article
+      data-analytics-view="portfolio_video_view"
+      data-analytics-category="video"
+      data-analytics-id={video.id}
+      data-analytics-name={video.title}
+      data-analytics-label={video.title}
       className={`overflow-hidden rounded-2xl border shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl ${
         isDark
           ? "border-cyan-300/20 bg-white/[0.04] shadow-cyan-500/10 hover:border-cyan-300/50 hover:shadow-cyan-500/20"
@@ -779,11 +785,27 @@ function VideoOverlay({
 
 function TrackedEmbed({ video, onMeaningfulView }) {
   const [watchSeconds, setWatchSeconds] = useState(0);
+  const playTracked = useRef(false);
   const [viewProcessed, setViewProcessed] = useState(false);
   const viewRequestStarted = useRef(false);
   const duration = video.durationSeconds || (video.ratio === "landscape" ? 60 : 25);
   const completionRate = Math.min(watchSeconds / duration, 1);
   const src = `${getEmbedUrl(video)}?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1`;
+
+  useEffect(() => {
+    if (playTracked.current) {
+      return;
+    }
+
+    playTracked.current = true;
+    pushAnalyticsEvent("video_play", {
+      video_id: video.id,
+      video_title: video.title,
+      video_provider: getVideoProvider(video),
+      video_url: getVideoUrl(video),
+      page_location: window.location.href,
+    });
+  }, [video]);
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {

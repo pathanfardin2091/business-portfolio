@@ -170,6 +170,12 @@ export default function Home() {
               <Link
                 key={project.slug}
                 href="/work"
+                data-analytics-event="portfolio_project_click"
+                data-analytics-view="portfolio_project_view"
+                data-analytics-category="portfolio"
+                data-analytics-id={project.slug}
+                data-analytics-name={project.title}
+                data-analytics-label={project.title}
                 className="group cursor-pointer transition-transform duration-300 hover:-translate-y-1"
               >
                 <div className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl bg-gray-100">
