@@ -54,16 +54,6 @@ const services = [
   },
 ];
 
-const clientLogos = [
-  "/clients/greengainz.png",
-  "/clients/kundal.png",
-  "/clients/atlas-mentor.png",
-  "/clients/patel-classes.png",
-  "/clients/supiato.png",
-  "/clients/kaka.png",
-  "/clients/jenny.png",
-  "/clients/metalit.png",
-];
 
 const heroSlides = [
   {
@@ -79,6 +69,29 @@ const heroSlides = [
 ];
 
 export default function Home() {
+  const [clientLogos, setClientLogos] = useState([]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetch("/api/client-logos")
+      .then((response) => (response.ok ? response.json() : []))
+      .then((logos) => {
+        if (isMounted) {
+          setClientLogos(logos);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setClientLogos([]);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <>
       <HeroSlider slides={heroSlides} />
@@ -213,29 +226,18 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-white px-6 py-32">
-        <div className="mx-auto max-w-6xl">
-          <h2 className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-center text-3xl font-semibold tracking-tight text-transparent sm:text-4xl">
-            Clients I&apos;ve Worked With
+      <section className="bg-white py-24">
+        <div className="mx-auto max-w-6xl px-6 text-center">
+          <h2 className="text-3xl font-semibold tracking-tight text-black sm:text-4xl">
+            Brands I&apos;ve Contributed To
           </h2>
-
-          <div className="mt-16 grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-4">
-            {clientLogos.map((logo) => (
-              <div
-                key={logo}
-                className="flex h-[90px] items-center justify-center rounded-xl bg-[#f2f2f2] transition-all duration-300 hover:scale-[1.04]"
-              >
-                <Image
-                  src={logo}
-                  alt="Client logo"
-                  width={160}
-                  height={84}
-                  className="max-h-[42px] w-auto max-w-[80%] object-contain"
-                />
-              </div>
-            ))}
-          </div>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-gray-600">
+            A curated selection of brands I&apos;ve contributed to through agency
+            collaborations and freelance projects.
+          </p>
         </div>
+
+        <LogoMarquee logos={clientLogos} />
       </section>
 
       <section className="bg-white px-6 py-24">
@@ -252,6 +254,286 @@ export default function Home() {
         </div>
       </section>
     </>
+  );
+}
+
+function LogoMarquee({ logos }) {
+  if (!logos.length) {
+    return null;
+  }
+
+  return (
+    <div className="client-marquee mt-14 overflow-hidden">
+      <div className="client-marquee-track flex w-max items-center">
+        {[0, 1].map((setIndex) => (
+          <div
+            key={setIndex}
+            aria-hidden={setIndex === 1}
+            className="flex items-center gap-12 pr-12 sm:gap-16 sm:pr-16"
+          >
+            {logos.map((logo) => (
+              <ProcessedLogo
+                key={`${logo.src}-${setIndex}`}
+                logo={logo}
+                isDuplicate={setIndex === 1}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ProcessedLogo({ logo, isDuplicate }) {
+  const [processedSources, setProcessedSources] = useState({
+    color: logo.src,
+    monochrome: logo.monochromeSrc,
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+
+    Promise.all([normalizeLogoImage(logo.src), normalizeLogoImage(logo.monochromeSrc)])
+      .then(([color, monochrome]) => {
+        if (isMounted) {
+          setProcessedSources({ color, monochrome });
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setProcessedSources({
+            color: logo.src,
+            monochrome: logo.monochromeSrc,
+          });
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [logo.monochromeSrc, logo.src]);
+
+  return (
+    <div className="client-logo group relative flex h-24 w-44 shrink-0 items-center justify-center sm:w-52">
+      <Image
+        src={processedSources.monochrome}
+        alt={isDuplicate ? "" : logo.alt}
+        width={416}
+        height={192}
+        sizes="208px"
+        unoptimized
+        className="absolute h-full w-full object-contain opacity-100 transition-opacity duration-300 group-hover:opacity-0"
+      />
+      <Image
+        src={processedSources.color}
+        alt=""
+        width={416}
+        height={192}
+        sizes="208px"
+        unoptimized
+        aria-hidden="true"
+        className="absolute h-full w-full object-contain opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+      />
+    </div>
+  );
+}
+
+function normalizeLogoImage(src) {
+  const outputWidth = 430;  // wider logo canvas
+  const outputHeight = 200; // taller logo canvas
+  const padding = 40;       // smaller padding = logos look bigger
+
+  return new Promise((resolve, reject) => {
+    const image = new window.Image();
+    image.crossOrigin = "anonymous";
+    image.onload = () => {
+      const sourceCanvas = document.createElement("canvas");
+      sourceCanvas.width = image.naturalWidth || image.width;
+      sourceCanvas.height = image.naturalHeight || image.height;
+
+      const sourceContext = sourceCanvas.getContext("2d", {
+        willReadFrequently: true,
+      });
+
+      sourceContext.drawImage(image, 0, 0);
+
+      const imageData = sourceContext.getImageData(
+        0,
+        0,
+        sourceCanvas.width,
+        sourceCanvas.height,
+      );
+      const bounds = getVisibleBounds(imageData);
+
+      const outputCanvas = document.createElement("canvas");
+      outputCanvas.width = outputWidth;
+      outputCanvas.height = outputHeight;
+
+      const outputContext = outputCanvas.getContext("2d");
+      const cropWidth = bounds.right - bounds.left + 1;
+      const cropHeight = bounds.bottom - bounds.top + 1;
+      const maxWidth = outputWidth - padding * 2;
+      const maxHeight = outputHeight - padding * 2;
+      const scale = Math.min(maxWidth / cropWidth, maxHeight / cropHeight);
+      const drawWidth = cropWidth * scale;
+      const drawHeight = cropHeight * scale;
+
+      outputContext.clearRect(0, 0, outputWidth, outputHeight);
+      outputContext.drawImage(
+        sourceCanvas,
+        bounds.left,
+        bounds.top,
+        cropWidth,
+        cropHeight,
+        (outputWidth - drawWidth) / 2,
+        (outputHeight - drawHeight) / 2,
+        drawWidth,
+        drawHeight,
+      );
+
+      resolve(outputCanvas.toDataURL("image/png"));
+    };
+    image.onerror = reject;
+    image.src = src;
+  });
+}
+
+function getVisibleBounds(imageData) {
+  const { data, width, height } = imageData;
+  const edgeBackground = getEdgeBackground(data, width, height);
+  const background = getConnectedBackgroundMask(data, width, height, edgeBackground);
+  let left = width;
+  let right = 0;
+  let top = height;
+  let bottom = 0;
+
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const index = y * width + x;
+      const alpha = data[index * 4 + 3];
+
+      if (alpha > 12 && !background[index]) {
+        left = Math.min(left, x);
+        right = Math.max(right, x);
+        top = Math.min(top, y);
+        bottom = Math.max(bottom, y);
+      }
+    }
+  }
+
+  if (left > right || top > bottom) {
+    return { left: 0, right: width - 1, top: 0, bottom: height - 1 };
+  }
+
+  return { left, right, top, bottom };
+}
+
+function getEdgeBackground(data, width, height) {
+  let red = 0;
+  let green = 0;
+  let blue = 0;
+  let count = 0;
+
+  const addPixel = (x, y) => {
+    const offset = (y * width + x) * 4;
+    const alpha = data[offset + 3];
+
+    if (alpha < 245) {
+      return;
+    }
+
+    red += data[offset];
+    green += data[offset + 1];
+    blue += data[offset + 2];
+    count += 1;
+  };
+
+  for (let x = 0; x < width; x += 1) {
+    addPixel(x, 0);
+    addPixel(x, height - 1);
+  }
+
+  for (let y = 1; y < height - 1; y += 1) {
+    addPixel(0, y);
+    addPixel(width - 1, y);
+  }
+
+  if (!count) {
+    return null;
+  }
+
+  return [red / count, green / count, blue / count];
+}
+
+function getConnectedBackgroundMask(data, width, height, edgeBackground) {
+  const mask = new Uint8Array(width * height);
+  const queueX = new Int32Array(width * height);
+  const queueY = new Int32Array(width * height);
+  let head = 0;
+  let tail = 0;
+
+  const enqueue = (x, y) => {
+    const index = y * width + x;
+
+    if (mask[index]) {
+      return;
+    }
+
+    const offset = index * 4;
+    const alpha = data[offset + 3];
+    const isTransparent = alpha < 12;
+    const isEdgeColor =
+      edgeBackground &&
+      alpha > 220 &&
+      getColorDistance(
+        data[offset],
+        data[offset + 1],
+        data[offset + 2],
+        edgeBackground[0],
+        edgeBackground[1],
+        edgeBackground[2],
+      ) < 28;
+
+    if (!isTransparent && !isEdgeColor) {
+      return;
+    }
+
+    mask[index] = 1;
+    queueX[tail] = x;
+    queueY[tail] = y;
+    tail += 1;
+  };
+
+  for (let x = 0; x < width; x += 1) {
+    enqueue(x, 0);
+    enqueue(x, height - 1);
+  }
+
+  for (let y = 1; y < height - 1; y += 1) {
+    enqueue(0, y);
+    enqueue(width - 1, y);
+  }
+
+  while (head < tail) {
+    const x = queueX[head];
+    const y = queueY[head];
+    head += 1;
+
+    if (x > 0) enqueue(x - 1, y);
+    if (x < width - 1) enqueue(x + 1, y);
+    if (y > 0) enqueue(x, y - 1);
+    if (y < height - 1) enqueue(x, y + 1);
+  }
+
+  return mask;
+}
+
+function getColorDistance(red, green, blue, baseRed, baseGreen, baseBlue) {
+  return Math.max(
+    Math.abs(red - baseRed),
+    Math.abs(green - baseGreen),
+    Math.abs(blue - baseBlue),
   );
 }
 

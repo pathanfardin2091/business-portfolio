@@ -33,3 +33,25 @@ button:disabled,
 [aria-disabled="true"] {
   cursor: not-allowed;
 }
+.client-marquee {
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.client-marquee-track {
+  animation: client-marquee-scroll 42s linear infinite;
+}
+
+.client-marquee:hover .client-marquee-track {
+  animation-play-state: paused;
+}
+
+
+@keyframes client-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
