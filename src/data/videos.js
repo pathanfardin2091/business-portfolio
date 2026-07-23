@@ -265,10 +265,8 @@ const baseData = {
   startingLikes: 0,
 };
 
-// Your existing videos (keep as is)
-const existingVideos = [
-  // paste your 1–18 here (same as your file)
-];
+
+
 
 // Optional: add URLs later here
 const extraVideoUrls = {
@@ -295,7 +293,7 @@ const extraVideoUrls = {
   19: "https://youtube.com/shorts/ePH2y6H1ii0?feature=share",
   20: "https://youtu.be/yiSX8klyxpk?si=JT9RTV_qJfG1yob3",
   21: "https://youtube.com/shorts/YCuoyln-NEk?feature=share",
-  22: "https://youtube.com/shorts/gkfSF4BLMus?feature=share",
+  22: "",
   23: "https://youtube.com/shorts/jUdiAmjaF3c?feature=share",
   24: "https://youtube.com/shorts/x1Eq9Q7Eh-M?feature=share",
   25: "https://youtube.com/shorts/jjP7QCCJ8Ds?feature=share",
@@ -304,7 +302,7 @@ const extraVideoUrls = {
   28: "https://youtube.com/shorts/PeB8XqxvPDY?feature=share",
   29: "https://youtube.com/shorts/tNFXXgMjgl0?feature=share",
   30: "https://youtube.com/shorts/1jHPvacK9fo?feature=share",
-  31: "https://youtube.com/shorts/zOC_7DjVfp0?feature=share",
+  31: "",
   32: "https://youtube.com/shorts/yBpshKgM0Zk?feature=share",
   33: "https://youtube.com/shorts/RaxcdbJ0HIU?feature=share",
   34: "https://youtube.com/shorts/kZ7-7ZxalwQ?feature=share",
@@ -318,7 +316,7 @@ const extraVideoUrls = {
   42: "https://youtu.be/13k1p0oCR1g?si=nu5ZgTj3qxuuZYu2",
   43: "https://youtube.com/shorts/91_4MxDj5nE?si=CUjhXbxP-U9ehRr_",
   44: "https://youtu.be/4mVfhx8FTXE?si=d28lHoi6xfbzmysa",
-  45: "https://youtube.com/shorts/IlpgmmsbWaI",
+  45: "",
   46: "https://youtube.com/shorts/KdEme4L8lrE?feature=share",
   47: "https://youtube.com/shorts/LplF7fjdx2k?feature=share",
   48: "https://youtube.com/shorts/hIMTFizZ51Y?feature=share",
@@ -334,18 +332,14 @@ const extraVideoUrls = {
 
 };
 
-// Auto-generate 19–100
-const generatedVideos = Array.from({ length: 1000 }, (_, i) => {
-  const idNumber = i + 1;
-
-  return {
+const videosWithUrls = Object.entries(extraVideoUrls)
+  .sort(([firstId], [secondId]) => Number(firstId) - Number(secondId))
+  .map(([idNumber, videoUrl]) => ({
     id: `video-${idNumber}`,
     ...baseData,
-    videoUrl: extraVideoUrls[idNumber] || "",
-  };
-});
+    videoUrl,
+  }));
 
-// Final export
-export const videos = [...existingVideos, ...generatedVideos];
+export const videos = videosWithUrls;
 
 

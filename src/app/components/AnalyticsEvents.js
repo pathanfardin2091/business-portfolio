@@ -19,6 +19,7 @@ function isLikelyCta(element) {
 export default function AnalyticsEvents() {
   const pathname = usePathname();
   const reachedScrollDepths = useRef(new Set());
+  const scrollFrameId = useRef(0);
 
   useEffect(() => {
     const pageUrl = window.location.href;
@@ -120,7 +121,8 @@ export default function AnalyticsEvents() {
       }
     };
 
-    const handleScroll = () => {
+    const trackScrollDepth = () => {
+      scrollFrameId.current = 0;
       const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
 
       if (scrollableHeight <= 0) {
@@ -144,6 +146,14 @@ export default function AnalyticsEvents() {
       });
     };
 
+    const handleScroll = () => {
+      if (scrollFrameId.current) {
+        return;
+      }
+
+      scrollFrameId.current = window.requestAnimationFrame(trackScrollDepth);
+    };
+
     document.addEventListener("submit", handleSubmit, true);
     document.addEventListener("click", handleClick, true);
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -152,6 +162,10 @@ export default function AnalyticsEvents() {
       document.removeEventListener("submit", handleSubmit, true);
       document.removeEventListener("click", handleClick, true);
       window.removeEventListener("scroll", handleScroll);
+      if (scrollFrameId.current) {
+        window.cancelAnimationFrame(scrollFrameId.current);
+        scrollFrameId.current = 0;
+      }
     };
   }, []);
 

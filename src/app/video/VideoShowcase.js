@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { pushAnalyticsEvent } from "../components/analytics";
 import {
@@ -616,9 +617,16 @@ function VideoCard({
           className={`relative overflow-hidden bg-black bg-cover bg-center ${
             video.ratio === "landscape" ? "aspect-video" : "aspect-[9/16]"
           }`}
-          style={thumbnail ? { backgroundImage: `url(${thumbnail})` } : undefined}
         >
-          {!thumbnail ? (
+          {thumbnail ? (
+            <Image
+              src={thumbnail}
+              alt=""
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-cover"
+            />
+          ) : (
             <div
               className={`absolute inset-0 ${
                 isDark
@@ -626,7 +634,7 @@ function VideoCard({
                   : "bg-gradient-to-br from-gray-900 via-gray-700 to-gray-950"
               }`}
             />
-          ) : null}
+          )}
           <div className="absolute inset-0 bg-black/20 transition group-hover:bg-black/50" />
           <div className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-black">
             {provider}
