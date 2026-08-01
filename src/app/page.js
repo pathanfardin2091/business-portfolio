@@ -59,7 +59,8 @@ const heroSlides = [
     poster: "/hero/package.png",
     title: "Hire Morion Work",
   },
-  { type: "image", src: "/hero/package.png", title: "Campaign banner" },
+  { type: "image", src: "/hero/package.png", title: "packaging design" },
+  { type: "image", src: "/hero/rock.jpg", title: "packaging design" },
 ];
 
 export default async function Home() {

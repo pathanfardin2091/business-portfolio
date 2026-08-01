@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 .data/
+.agents/
+.codex/
+structure.txt
 
 # debug
 npm-debug.log*
@@ -41,3 +44,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+tmp-dev.err
+tmp-dev.out
