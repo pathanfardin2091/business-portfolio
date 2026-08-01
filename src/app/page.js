@@ -56,7 +56,7 @@ const heroSlides = [
   {
     type: "video",
     src: "/hero/hire-morion-work.mp4",
-    poster: "/hero/package.png",
+    // poster: "/hero/package.png",
     title: "Hire Morion Work",
   },
   { type: "image", src: "/hero/package.png", title: "packaging design" },
